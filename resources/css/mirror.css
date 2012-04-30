@@ -1,0 +1,116 @@
+.x-mirror {
+    direction: rtl;
+}
+
+.x-mirror .x-box-item {
+    left: auto;
+    right: 0;
+}
+
+/* Grid */
+.x-mirror-scrollbar-left .x-column-header {
+    border-right: 0 none;
+    border-left: 1px solid #C5C5C5;
+}
+
+.x-mirror .x-column-header-trigger {
+    right: auto;
+    left: 0;
+    background-image: url('../../resources/themes/images/default/grid/grid3-hd-btn.gif');
+    background-position: right center;
+}
+
+.x-mirror .x-column-header-align-right .x-column-header-text {
+    padding-right: 0;
+    padding-left: .5ex;
+    margin-right: 0;
+}
+
+.x-mirror .x-column-header-sort-ASC .x-column-header-text,
+.x-mirror .x-column-header-sort-DESC .x-column-header-text {
+    padding-left: 16px;
+    background-position: left 6px;
+}
+
+/* Menu Item */
+.x-mirror .x-menu-item-link {
+    padding-right: 32px;
+    padding-left: 2px;
+}
+
+.x-mirror .x-menu-item-icon {
+    right: 6px;
+    left: auto;
+}
+
+.x-mirror .x-menu-item-arrow {
+    left: 0;
+    right: auto;
+    background-image: url('../../resources/themes/images/default/menu/menu-parent.gif');
+}
+
+.x-mirror .x-menu-icon-separator {
+    right: 27px;
+    left: auto;
+}
+
+/* DD */
+.x-mirror .x-dd-drop-icon {
+    right: 3px;
+    left: auto;
+}
+
+.x-mirror .x-dd-drag-ghost {
+    padding-right: 20px;
+    padding-left: 5px;
+}
+
+/* Button */
+.x-mirror .x-btn-default-toolbar-small-icon-text-left .x-btn-icon {
+    right: 0;
+    left: auto;
+}
+
+.x-mirror .x-btn-default-toolbar-small-icon-text-left .x-btn-inner {
+    padding-right: 20px;
+    padding-left: 4px;
+}
+
+/* Toolbar */
+.x-mirror .x-toolbar {
+    padding: 2px 2px 2px 0;
+}
+
+.x-mirror .x-toolbar .x-toolbar-item {
+    margin: 0 0 0 2px;
+}
+
+/* Tool Images */
+.x-mirror .x-tool-expand-right,
+.x-mirror .x-tool-collapse-right {
+    background-position: 0 -180px;
+}
+
+.x-mirror .x-tool-over .x-tool-expand-right,
+.x-mirror .x-tool-over .x-tool-collapse-right {
+    background-position: -15px -180px;
+}
+
+.x-mirror .x-tool-expand-left,
+.x-mirror .x-tool-collapse-left {
+    background-position: 0 -165px;
+}
+
+.x-mirror .x-tool-over .x-tool-expand-left,
+.x-mirror .x-tool-over .x-tool-collapse-left {
+    background-position: -15px -165px;
+}
+
+/* Splitter */
+.x-mirror .x-layout-split-left {
+    background-image: url('../../resources/themes/images/default/util/splitter/mini-left.gif');
+}
+
+.x-mirror .x-splitter-collapsed .x-layout-split-left {
+    background-image: url('../../resources/themes/images/default/util/splitter/mini-right.gif');
+}

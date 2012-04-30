@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Feed Viewer</title>
+    
+    <link rel="stylesheet" href="../extjs/resources/css/ext-all.css" type="text/css" media="screen" charset="utf-8">
+    <link rel="stylesheet" href="../extjs/examples/feed-viewer/Feed-Viewer.css" type="text/css" media="screen" charset="utf-8">
+    <link rel="stylesheet" href="../resources/css/mirror.css" type="text/css" media="screen" charset="utf-8">
+    <style type="text/css">
+        .x-menu-item img.preview-right, .preview-right {
+            background-image: url(images/preview-right.gif);
+        }
+        .x-menu-item img.preview-bottom, .preview-bottom {
+            background-image: url(images/preview-bottom.gif);
+        }
+        .x-menu-item img.preview-hide, .preview-hide {
+            background-image: url(images/preview-hide.gif);
+        }
+
+        #reading-menu .x-menu-item-checked {
+            border: 1px dotted #a3bae9 !important;
+            background: #DFE8F6;
+            padding: 0;
+            margin: 0;
+        }
+    </style>
+
+    <script src="../extjs/ext-debug.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../ext-mirror.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" charset="utf-8">
+        Ext.Loader.config.disableCaching = false;
+        function hasOption (name) {
+            return window.location.search.indexOf(name) >= 0;
+        }
+
+        Ext.Loader.setConfig({enabled: true});
+        Ext.Loader.setPath('Ext.ux', '../extjs/examples/ux');
+        Ext.require([
+            'Ext.grid.*',
+            'Ext.data.*',
+            'Ext.util.*',
+            'Ext.Action',
+            'Ext.tab.*',
+            'Ext.button.*',
+            'Ext.form.*',
+            'Ext.layout.container.Card',
+            'Ext.layout.container.Border',
+            'Ext.ux.ajax.SimManager',
+            'Ext.ux.PreviewPlugin'
+        ]);
+        Ext.onReady(function(){
+            if (hasOption('simjax')) {
+                initAjaxSim();
+            }
+
+            var app = new FeedViewer.App();
+        });
+    </script>
+    
+    <script type="text/javascript" src="../extjs/examples/feed-viewer/viewer/FeedPost.js"></script>
+    <script type="text/javascript" src="../extjs/examples/feed-viewer/viewer/FeedDetail.js"></script>
+    <script type="text/javascript" src="../extjs/examples/feed-viewer/viewer/FeedGrid.js"></script>
+    <script type="text/javascript" src="../extjs/examples/feed-viewer/viewer/FeedInfo.js"></script>
+    <script type="text/javascript" src="../extjs/examples/feed-viewer/viewer/FeedPanel.js"></script>
+    <script type="text/javascript" src="../extjs/examples/feed-viewer/viewer/FeedViewer.js"></script>
+    <script type="text/javascript" src="../extjs/examples/feed-viewer/viewer/FeedWindow.js"></script>
+    <script type="text/javascript" src="../extjs/examples/feed-viewer/viewer/Sim.js"></script>
+</head>
+<body>
+</body>
+</html>
