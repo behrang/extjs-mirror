@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>ExtJS Mirror by behrang</title>
+    
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>ExtJS Mirror</h1>
+        <p>RTL support for Sencha Ext JS Framework</p>
+        <p class="view"><a href="https://github.com/behrang/extjs-mirror">View the Project on GitHub <small>behrang/extjs-mirror</small></a></p>
+        <ul>
+          <li><a href="https://github.com/behrang/extjs-mirror/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/behrang/extjs-mirror/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/behrang/extjs-mirror">Fork On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h3>What is extjs-mirror</h3>
+
+<p>It is mostly a hack that adds RTL feature to <a href="http://www.sencha.com/products/extjs/">ExtJS framework</a>.</p>
+
+<p>Some languages like Persian, Hebrew and Arabic are <a href="http://en.wikipedia.org/wiki/Right-to-left">RTL (Right-To-Left)</a>. ExtJS does not support RTL. To support RTL, every component should layout itself from right to left.</p>
+
+<p>This project, provides this feature by overriding some basic functionality in ExtJS. Here, positioning of elements are overridden so that instead of positioning elements from "Top Left", positioning is converted to "Top Right" (hence the name MIRROR).</p>
+
+<p>There are more problems to solve. Some browsers like Firefox and IE, place scrollbars on left in RTL pages and some like Chrome, place scrollbars on right in either LTR or RTL. So scrollbar position have to be considered.</p>
+
+<p>To use this, you have to develop your application for LTR. Then add a script (ext-mirror.js) and a css (ext-mirror.css) to your page and voila, everything will be converted to RTL. This way you can create a single internationalized app and use L10N to have both RTL and LTR apps.</p>
+
+<h3>Examples</h3>
+
+<ul>
+<li>Grid (<a href="2.html">mirrored</a>) (<a href="2.html?ext-mirror-off">normal</a>)</li>
+<li>Tabs (<a href="3.html">mirrored</a>) (<a href="3.html?ext-mirror-off">normal</a>)</li>
+<li>Feed Viewer (<a href="4.html">mirrored</a>) (<a href="4.html?ext-mirror-off">normal</a>)</li>
+</ul>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/behrang">behrang</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-31303862-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
