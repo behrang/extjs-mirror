@@ -17,6 +17,6 @@ There are more problems to solve. Some browsers like Firefox and IE, place scrol
 To use this, you have to develop your application for LTR. Then add a script (ext-mirror.js) and a css (ext-mirror.css) to your page and voila, everything will be converted to RTL. This way you can create a single internationalized app and use L10N to have both RTL and LTR apps.
 
 ### Examples
-* Grid ([mirrored](2.html)) ([normal](2.html?ext-mirror-off))
-* Tabs ([mirrored](3.html)) ([normal](3.html?ext-mirror-off))
-* Feed Viewer ([mirrored](4.html)) ([normal](4.html?ext-mirror-off))
+* Grid ([mirrored](http://behrang.github.com/extjs-mirror/2.html)) ([normal](http://behrang.github.com/extjs-mirror/2.html?ext-mirror-off))
+* Tabs ([mirrored](http://behrang.github.com/extjs-mirror/3.html)) ([normal](http://behrang.github.com/extjs-mirror/3.html?ext-mirror-off))
+* Feed Viewer ([mirrored](http://behrang.github.com/extjs-mirror/4.html)) ([normal](http://behrang.github.com/extjs-mirror/4.html?ext-mirror-off))
