@@ -337,6 +337,41 @@ Ext.onReady(function () {
         });
     }, this, 'Ext.grid.column.Column');
     
+    // src/util/Renderable.js
+    Ext.ClassManager.onCreated(function () {
+        Ext.override(Ext.util.Renderable, {
+            afterFirstLayout : function (width, height) {
+                var me = this,
+                    hasX = Ext.isDefined(me.x),
+                    hasY = Ext.isDefined(me.y),
+                    pos, xy;
+
+                // For floaters, calculate x and y if they aren't defined by aligning
+                // the sized element to the center of either the container or the ownerCt
+                if (me.floating && (!hasX || !hasY)) {
+                    if (me.floatParent) {
+                        xy = me.el.getAlignToXY(me.floatParent.getTargetEl(), 'c-c');
+                        pos = me.floatParent.getTargetEl().translatePoints(xy[0], xy[1]);
+                    } else {
+                        xy = me.el.getAlignToXY(me.container, 'c-c');
+                        pos = me.container.translatePoints(xy[0], xy[1]);
+                    }
+                    me.x = hasX ? me.x : pos.right;
+                    me.y = hasY ? me.y : pos.top;
+                    hasX = hasY = true;
+                }
+
+                if (hasX || hasY) {
+                    me.setPosition(me.x, me.y);
+                }
+                me.onBoxReady(width, height);
+                if (me.hasListeners.boxready) {
+                    me.fireEvent('boxready', me, width, height);
+                }
+            }
+        });
+    }, this, 'Ext.util.Renderable');
+    
 });
 
 }());
