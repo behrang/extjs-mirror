@@ -372,6 +372,29 @@ Ext.onReady(function () {
         });
     }, this, 'Ext.util.Renderable');
     
+    // src/slider/Multi.js
+    Ext.ClassManager.onCreated(function () {
+        Ext.override(Ext.slider.Multi, {
+            getTrackpoint : function (xy) {
+                var me = this,
+                    result,
+                    positionProperty,
+                    sliderTrack = me.innerEl,
+                    trackLength;
+
+                if (me.vertical) {
+                    positionProperty = 'top';
+                    trackLength = sliderTrack.getHeight();
+                } else {
+                    positionProperty = 'right';
+                    trackLength = sliderTrack.getWidth();
+                }
+                result = Ext.Number.constrain(sliderTrack.translatePoints(xy)[positionProperty], 0, trackLength);
+                return me.vertical ? trackLength - result : result;
+            }
+        });
+    }, this, 'Ext.slider.Multi');
+    
 });
 
 }());
