@@ -21,21 +21,21 @@ Ext.onReady(function () {
     // src/dom/Element.position.js
     Ext.override(Element, {
         
-        setLeft: function(left) {
+        setLeft: function (left) {
             this.setStyle(RIGHT, this.addUnits(left));
             return this;
         },
         
-        setRight: function(right) {
+        setRight: function (right) {
             this.setStyle(LEFT, this.addUnits(right));
             return this;
         },
         
-        getLeft: function(local) {
+        getLeft: function (local) {
             return !local ? this.getX() : parseFloat(this.getStyle(RIGHT)) || 0;
         },
         
-        translatePoints: function(x, y) {
+        translatePoints: function (x, y) {
             var me = this,
                 styles = me.getStyle(positionTopRight),
                 relative = styles.position == 'relative',
@@ -68,7 +68,7 @@ Ext.onReady(function () {
             };
         },
         
-        setLeftTop: function(left, top) {
+        setLeftTop: function (left, top) {
             var style = this.dom.style;
 
             style.right = Element.addUnits(left);
@@ -82,16 +82,26 @@ Ext.onReady(function () {
     // src/dom/Element.scroll.js
     Ext.override(Element, {
         
-        getScroll: function(){
-            var ret = this.callParent();
-            ret.left = -ret.left;
+        getScroll: function () {
+            var me = this,
+                ret = me.callParent(),
+                dom = me.dom;
+            if (dom === document.body || dom === document.documentElement) {
+                ret.left = -ret.left;
+            }
             return ret;
         },
         
-        scrollTo: function(side, value, animate) {
-            var top = /top/i.test(side);
+        scrollTo: function (side, value, animate) {
+            var top = /top/i.test(side),
+                me = this,
+                dom = me.dom;
             if (!top) {
-                value = -value;
+                if (dom === document.body || dom === document.documentElement) {
+                    value = -value;
+                } else {
+                    value = dom.scrollWidth - dom.clientWidth - value;
+                }
             }
             return this.callParent([side, value, animate]);
         }
@@ -99,7 +109,7 @@ Ext.onReady(function () {
     });
     
     // src/core/src/dom/AbstractElement.static.js
-    Element.getXY = function(el) {
+    Element.getXY = function (el) {
         var doc = document,
             AbstractElement = Ext.dom.AbstractElement,
             flyInstance,
@@ -144,7 +154,7 @@ Ext.onReady(function () {
     };
     
     // src/core/src/EventManager.js
-    Ext.EventManager.getPageXY = function(event) {
+    Ext.EventManager.getPageXY = function (event) {
             var me = this,
                 bd = (document.body || document.documentElement),
                 ret;
@@ -154,7 +164,7 @@ Ext.onReady(function () {
     };
     
     // like src/core/src/Ext-more.js@getScrollbarSize
-    Ext.getScrollbarPlacement = function(force) {
+    Ext.getScrollbarPlacement = function (force) {
         if (force || !scrollbarPlacement) {
             var db = document.body,
                 div = document.createElement('div');
@@ -179,7 +189,7 @@ Ext.onReady(function () {
         Ext.getBody().addCls('x-mirror-scrollbar-right');
         Ext.ClassManager.onCreated(function () {
             Ext.override(Ext.grid.ColumnLayout, {
-                calculate: function(ownerContext) {
+                calculate: function (ownerContext) {
                     var me = this,
                         childItems = ownerContext.childItems,
                         childContext,
@@ -200,7 +210,7 @@ Ext.onReady(function () {
     // src/Component.js
     Ext.ClassManager.onCreated(function () {
         Ext.override(Ext.Component, {
-            setPagePosition: function(x, y, animate) {
+            setPagePosition: function (x, y, animate) {
                 var me = this,
                     p,
                     floatParentBox;
@@ -262,7 +272,18 @@ Ext.onReady(function () {
     // src/layout/container/boxOverflow/Scroller.js
     Ext.ClassManager.onCreated(function () {
         Ext.override(Ext.layout.container.boxOverflow.Scroller, {
-            finishedLayout: function(ownerContext) {
+            
+            beginLayout: function (ownerContext) {
+                var me = this,
+                    layout = me.layout,
+                    dom = layout.innerCt.dom,
+                    pos = dom.scrollWidth - dom.clientWidth - dom.scrollLeft;
+                
+                this.callParent(arguments);
+                ownerContext.innerCtScrollPos = pos;
+            },
+            
+            finishedLayout: function (ownerContext) {
                 var me = this,
                     layout = me.layout,
                     dom = layout.innerCt.dom,
@@ -271,7 +292,7 @@ Ext.onReady(function () {
                 dom.scrollLeft = dom.scrollWidth - dom.clientWidth - scrollPos;
             },
             
-            getScrollPosition: function() {
+            getScrollPosition: function () {
                 var me = this,
                     layout = me.layout,
                     dom = layout.innerCt.dom,
