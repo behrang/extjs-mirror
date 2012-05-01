@@ -76,6 +76,20 @@
     padding-left: 4px;
 }
 
+.x-mirror .x-btn-default-small-icon-text-left .x-btn-inner {
+    padding-right: 20px;
+    padding-left: 4px;
+}
+
+.x-mirror .x-btn-default-small-icon-text-left .x-btn-icon {
+    right: 0;
+    left: auto;
+}
+
+.x-mirror .x-btn-icon-text-left .x-btn-icon {
+    background-position: right center;
+}
+
 /* Toolbar */
 .x-mirror .x-toolbar {
     padding: 2px 2px 2px 0;
@@ -113,4 +127,49 @@
 
 .x-mirror .x-splitter-collapsed .x-layout-split-left {
     background-image: url('../../resources/themes/images/default/util/splitter/mini-right.gif');
+}
+
+/* Tab Bar */
+.x-mirror .x-tab-close-btn {
+    left: 2px;
+    right: auto;
+}
+
+.x-mirror .x-tab-closable em {
+    padding-left: 14px;
+    padding-right: 6px;
+}
+
+.x-mirror .x-tab-icon-text-left .x-tab-inner {
+    padding-right: 20px;
+    padding-left: 0;
+}
+
+.x-mirror .x-tab-icon {
+    right: 0;
+    left: auto;
+}
+
+.x-mirror .x-horizontal-box-overflow-body {
+    float: right;
+}
+
+.x-mirror .x-box-scroller-left {
+    float: right;
+}
+
+.x-mirror .x-box-scroller-right {
+    float: left;
+}
+
+.x-mirror .x-box-scroller-left .x-toolbar-scroll-left,
+.x-mirror .x-box-scroller-left .x-tabbar-scroll-left {
+    background-position: 0 0;
+    background-image: url('../../resources/themes/images/default/tab-bar/scroll-left.gif');
+}
+
+.x-mirror .x-box-scroller-right .x-toolbar-scroll-right,
+.x-mirror .x-box-scroller-right .x-tabbar-scroll-right {
+    background-position: -18px 0;
+    background-image: url('../../resources/themes/images/default/tab-bar/scroll-right.gif');
 }
