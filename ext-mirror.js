@@ -395,6 +395,67 @@ Ext.onReady(function () {
         });
     }, this, 'Ext.slider.Multi');
     
+    // src/grid/plugin/HeaderResizer.js
+    Ext.ClassManager.onCreated(function () {
+        Ext.override(Ext.grid.plugin.HeaderResizer, {
+            onStart: function (e) {
+                var me       = this,
+                    dragHd   = me.dragHd,
+                    dragHdEl = dragHd.el,
+                    width    = dragHdEl.getWidth(),
+                    headerCt = me.headerCt,
+                    t        = e.getTarget(),
+                    xy, gridSection, dragHct, firstSection, lhsMarker, rhsMarker, el, offsetLeft, offsetTop, topLeft, markerHeight, top;
+
+                if (me.dragHd && !Ext.fly(t).hasCls(Ext.baseCSSPrefix + 'column-header-trigger')) {
+                    headerCt.dragging = true;
+                }
+
+                me.origWidth = width;
+
+                // setup marker proxies
+                if (!me.dynamic) {
+                    xy           = dragHdEl.getXY();
+                    gridSection  = headerCt.up('[scrollerOwner]');
+                    dragHct      = me.dragHd.up(':not([isGroupHeader])');
+                    firstSection = dragHct.up();
+                    lhsMarker    = gridSection.getLhsMarker();
+                    rhsMarker    = gridSection.getRhsMarker();
+                    el           = rhsMarker.parent();
+                    offsetLeft   = el.getLeft(true);
+                    offsetTop    = el.getTop(true);
+                    topLeft      = el.translatePoints(xy);
+                    markerHeight = firstSection.body.getHeight() + headerCt.getHeight();
+                    top = topLeft.top - offsetTop;
+
+                    lhsMarker.setTop(top);
+                    rhsMarker.setTop(top);
+                    lhsMarker.setHeight(markerHeight);
+                    rhsMarker.setHeight(markerHeight);
+                    lhsMarker.setLeft(topLeft.right - offsetLeft);
+                    rhsMarker.setLeft(topLeft.right + width - offsetLeft);
+                }
+            },
+            
+            onDrag: function (e) {
+                if (!this.dynamic) {
+                    var xy          = this.tracker.getXY('point'),
+                        gridSection = this.headerCt.up('[scrollerOwner]'),
+                        rhsMarker   = gridSection.getRhsMarker(),
+                        el          = rhsMarker.parent(),
+                        topLeft     = el.translatePoints(xy),
+                        offsetLeft  = el.getLeft(true);
+
+                    rhsMarker.setLeft(topLeft.right - offsetLeft);
+                // Resize as user interacts
+                } else {
+                    this.doResize();
+                }
+            }
+            
+        });
+    }, this, 'Ext.grid.plugin.HeaderResizer');
+    
 });
 
 }());
