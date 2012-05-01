@@ -21,21 +21,21 @@ Ext.onReady(function () {
     // src/dom/Element.position.js
     Ext.override(Element, {
         
-        setLeft: function(left) {
+        setLeft: function (left) {
             this.setStyle(RIGHT, this.addUnits(left));
             return this;
         },
         
-        setRight: function(right) {
+        setRight: function (right) {
             this.setStyle(LEFT, this.addUnits(right));
             return this;
         },
         
-        getLeft: function(local) {
+        getLeft: function (local) {
             return !local ? this.getX() : parseFloat(this.getStyle(RIGHT)) || 0;
         },
         
-        translatePoints: function(x, y) {
+        translatePoints: function (x, y) {
             var me = this,
                 styles = me.getStyle(positionTopRight),
                 relative = styles.position == 'relative',
@@ -68,7 +68,7 @@ Ext.onReady(function () {
             };
         },
         
-        setLeftTop: function(left, top) {
+        setLeftTop: function (left, top) {
             var style = this.dom.style;
 
             style.right = Element.addUnits(left);
@@ -82,16 +82,26 @@ Ext.onReady(function () {
     // src/dom/Element.scroll.js
     Ext.override(Element, {
         
-        getScroll: function(){
-            var ret = this.callParent();
-            ret.left = -ret.left;
+        getScroll: function () {
+            var me = this,
+                ret = me.callParent(),
+                dom = me.dom;
+            if (dom === document.body || dom === document.documentElement) {
+                ret.left = -ret.left;
+            }
             return ret;
         },
         
-        scrollTo: function(side, value, animate) {
-            var top = /top/i.test(side);
+        scrollTo: function (side, value, animate) {
+            var top = /top/i.test(side),
+                me = this,
+                dom = me.dom;
             if (!top) {
-                value = -value;
+                if (dom === document.body || dom === document.documentElement) {
+                    value = -value;
+                } else {
+                    value = dom.scrollWidth - dom.clientWidth - value;
+                }
             }
             return this.callParent([side, value, animate]);
         }
@@ -99,7 +109,7 @@ Ext.onReady(function () {
     });
     
     // src/core/src/dom/AbstractElement.static.js
-    Element.getXY = function(el) {
+    Element.getXY = function (el) {
         var doc = document,
             AbstractElement = Ext.dom.AbstractElement,
             flyInstance,
@@ -144,7 +154,7 @@ Ext.onReady(function () {
     };
     
     // src/core/src/EventManager.js
-    Ext.EventManager.getPageXY = function(event) {
+    Ext.EventManager.getPageXY = function (event) {
             var me = this,
                 bd = (document.body || document.documentElement),
                 ret;
@@ -154,7 +164,7 @@ Ext.onReady(function () {
     };
     
     // like src/core/src/Ext-more.js@getScrollbarSize
-    Ext.getScrollbarPlacement = function(force) {
+    Ext.getScrollbarPlacement = function (force) {
         if (force || !scrollbarPlacement) {
             var db = document.body,
                 div = document.createElement('div');
@@ -179,7 +189,7 @@ Ext.onReady(function () {
         Ext.getBody().addCls('x-mirror-scrollbar-right');
         Ext.ClassManager.onCreated(function () {
             Ext.override(Ext.grid.ColumnLayout, {
-                calculate: function(ownerContext) {
+                calculate: function (ownerContext) {
                     var me = this,
                         childItems = ownerContext.childItems,
                         childContext,
@@ -200,7 +210,7 @@ Ext.onReady(function () {
     // src/Component.js
     Ext.ClassManager.onCreated(function () {
         Ext.override(Ext.Component, {
-            setPagePosition: function(x, y, animate) {
+            setPagePosition: function (x, y, animate) {
                 var me = this,
                     p,
                     floatParentBox;
@@ -262,7 +272,18 @@ Ext.onReady(function () {
     // src/layout/container/boxOverflow/Scroller.js
     Ext.ClassManager.onCreated(function () {
         Ext.override(Ext.layout.container.boxOverflow.Scroller, {
-            finishedLayout: function(ownerContext) {
+            
+            beginLayout: function (ownerContext) {
+                var me = this,
+                    layout = me.layout,
+                    dom = layout.innerCt.dom,
+                    pos = dom.scrollWidth - dom.clientWidth - dom.scrollLeft;
+                
+                this.callParent(arguments);
+                ownerContext.innerCtScrollPos = pos;
+            },
+            
+            finishedLayout: function (ownerContext) {
                 var me = this,
                     layout = me.layout,
                     dom = layout.innerCt.dom,
@@ -271,7 +292,7 @@ Ext.onReady(function () {
                 dom.scrollLeft = dom.scrollWidth - dom.clientWidth - scrollPos;
             },
             
-            getScrollPosition: function() {
+            getScrollPosition: function () {
                 var me = this,
                     layout = me.layout,
                     dom = layout.innerCt.dom,
@@ -315,6 +336,125 @@ Ext.onReady(function () {
             align: 'right'
         });
     }, this, 'Ext.grid.column.Column');
+    
+    // src/util/Renderable.js
+    Ext.ClassManager.onCreated(function () {
+        Ext.override(Ext.util.Renderable, {
+            afterFirstLayout : function (width, height) {
+                var me = this,
+                    hasX = Ext.isDefined(me.x),
+                    hasY = Ext.isDefined(me.y),
+                    pos, xy;
+
+                // For floaters, calculate x and y if they aren't defined by aligning
+                // the sized element to the center of either the container or the ownerCt
+                if (me.floating && (!hasX || !hasY)) {
+                    if (me.floatParent) {
+                        xy = me.el.getAlignToXY(me.floatParent.getTargetEl(), 'c-c');
+                        pos = me.floatParent.getTargetEl().translatePoints(xy[0], xy[1]);
+                    } else {
+                        xy = me.el.getAlignToXY(me.container, 'c-c');
+                        pos = me.container.translatePoints(xy[0], xy[1]);
+                    }
+                    me.x = hasX ? me.x : pos.right;
+                    me.y = hasY ? me.y : pos.top;
+                    hasX = hasY = true;
+                }
+
+                if (hasX || hasY) {
+                    me.setPosition(me.x, me.y);
+                }
+                me.onBoxReady(width, height);
+                if (me.hasListeners.boxready) {
+                    me.fireEvent('boxready', me, width, height);
+                }
+            }
+        });
+    }, this, 'Ext.util.Renderable');
+    
+    // src/slider/Multi.js
+    Ext.ClassManager.onCreated(function () {
+        Ext.override(Ext.slider.Multi, {
+            getTrackpoint : function (xy) {
+                var me = this,
+                    result,
+                    positionProperty,
+                    sliderTrack = me.innerEl,
+                    trackLength;
+
+                if (me.vertical) {
+                    positionProperty = 'top';
+                    trackLength = sliderTrack.getHeight();
+                } else {
+                    positionProperty = 'right';
+                    trackLength = sliderTrack.getWidth();
+                }
+                result = Ext.Number.constrain(sliderTrack.translatePoints(xy)[positionProperty], 0, trackLength);
+                return me.vertical ? trackLength - result : result;
+            }
+        });
+    }, this, 'Ext.slider.Multi');
+    
+    // src/grid/plugin/HeaderResizer.js
+    Ext.ClassManager.onCreated(function () {
+        Ext.override(Ext.grid.plugin.HeaderResizer, {
+            onStart: function (e) {
+                var me       = this,
+                    dragHd   = me.dragHd,
+                    dragHdEl = dragHd.el,
+                    width    = dragHdEl.getWidth(),
+                    headerCt = me.headerCt,
+                    t        = e.getTarget(),
+                    xy, gridSection, dragHct, firstSection, lhsMarker, rhsMarker, el, offsetLeft, offsetTop, topLeft, markerHeight, top;
+
+                if (me.dragHd && !Ext.fly(t).hasCls(Ext.baseCSSPrefix + 'column-header-trigger')) {
+                    headerCt.dragging = true;
+                }
+
+                me.origWidth = width;
+
+                // setup marker proxies
+                if (!me.dynamic) {
+                    xy           = dragHdEl.getXY();
+                    gridSection  = headerCt.up('[scrollerOwner]');
+                    dragHct      = me.dragHd.up(':not([isGroupHeader])');
+                    firstSection = dragHct.up();
+                    lhsMarker    = gridSection.getLhsMarker();
+                    rhsMarker    = gridSection.getRhsMarker();
+                    el           = rhsMarker.parent();
+                    offsetLeft   = el.getLeft(true);
+                    offsetTop    = el.getTop(true);
+                    topLeft      = el.translatePoints(xy);
+                    markerHeight = firstSection.body.getHeight() + headerCt.getHeight();
+                    top = topLeft.top - offsetTop;
+
+                    lhsMarker.setTop(top);
+                    rhsMarker.setTop(top);
+                    lhsMarker.setHeight(markerHeight);
+                    rhsMarker.setHeight(markerHeight);
+                    lhsMarker.setLeft(topLeft.right - offsetLeft);
+                    rhsMarker.setLeft(topLeft.right + width - offsetLeft);
+                }
+            },
+            
+            onDrag: function (e) {
+                if (!this.dynamic) {
+                    var xy          = this.tracker.getXY('point'),
+                        gridSection = this.headerCt.up('[scrollerOwner]'),
+                        rhsMarker   = gridSection.getRhsMarker(),
+                        el          = rhsMarker.parent(),
+                        topLeft     = el.translatePoints(xy),
+                        offsetLeft  = el.getLeft(true);
+
+                    rhsMarker.setLeft(topLeft.right - offsetLeft);
+                // Resize as user interacts
+                } else {
+                    this.doResize();
+                }
+            }
+            
+        });
+    }, this, 'Ext.grid.plugin.HeaderResizer');
     
 });
 
