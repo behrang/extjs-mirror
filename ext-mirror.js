@@ -1,6 +1,7 @@
 (function () {
 
 var Element = Ext.dom.Element,
+    AbstractElement = Ext.dom.AbstractElement,
     LEFT = "left",
     RIGHT = "right",
     positionTopRight = ['position', 'top', 'right'],
@@ -63,7 +64,7 @@ Ext.onReady(function () {
             right = (typeof x == 'number') ? x - xy[0] + right : undefined;
             top = (typeof y == 'number') ? y - xy[1] + top : undefined;
             return {
-                right: right,
+                left: right,
                 top: top
             };
         },
@@ -109,9 +110,8 @@ Ext.onReady(function () {
     });
     
     // src/core/src/dom/AbstractElement.static.js
-    Element.getXY = function (el) {
+    Element.getXY = AbstractElement.getXY = function (el) {
         var doc = document,
-            AbstractElement = Ext.dom.AbstractElement,
             flyInstance,
             fly = function (el) {
                 if (!flyInstance) {
@@ -152,6 +152,57 @@ Ext.onReady(function () {
         }
         return ret;
     };
+    Element.setXY = AbstractElement.setXY = function (el, xy) {
+        (el = Ext.fly(el, '_setXY')).position();
+
+        var pts = el.translatePoints(xy),
+            style = el.dom.style,
+            pos;
+        
+        if (pts.left) {
+            pts.right = pts.left;
+            delete pts.left;
+        }
+
+        for (pos in pts) {
+            if (!isNaN(pts[pos])) {
+                style[pos] = pts[pos] + "px";
+            }
+        }
+    };
+    
+    // src/core/src/dom/AbstractElement.position.js
+    Ext.override(Ext.dom.AbstractElement, {
+        setXY: function(pos) {
+            var me = this,
+                pts,
+                style,
+                pt;
+
+            if (arguments.length > 1) {
+                pos = [pos, arguments[1]];
+            }
+
+            // me.position();
+            pts = me.translatePoints(pos);
+            style = me.dom.style;
+            
+            if (pts.left) {
+                pts.right = pts.left;
+                delete pts.left;
+            }
+
+            for (pt in pts) {
+                if (!pts.hasOwnProperty(pt)) {
+                    continue;
+                }
+                if (!isNaN(pts[pt])) {
+                    style[pt] = pts[pt] + "px";
+                }
+            }
+            return me;
+        }
+    });
     
     // src/core/src/EventManager.js
     Ext.EventManager.getPageXY = function (event) {
@@ -206,50 +257,7 @@ Ext.onReady(function () {
             });
         }, this, 'Ext.grid.ColumnLayout');
     }
-    
-    // src/Component.js
-    Ext.ClassManager.onCreated(function () {
-        Ext.override(Ext.Component, {
-            setPagePosition: function (x, y, animate) {
-                var me = this,
-                    p,
-                    floatParentBox;
-
-                if (Ext.isArray(x)) {
-                    y = x[1];
-                    x = x[0];
-                }
-                me.pageX = x;
-                me.pageY = y;
-
-                if (me.floating) {
-
-                    // Floating Components which are registered with a Container have to have their x and y properties made relative
-                    if (me.isContainedFloater()) {
-                        floatParentBox = me.floatParent.getTargetEl().getViewRegion();
-                        if (Ext.isNumber(x) && Ext.isNumber(floatParentBox.left)) {
-                            x -= floatParentBox.left;
-                        }
-                        if (Ext.isNumber(y) && Ext.isNumber(floatParentBox.top)) {
-                            y -= floatParentBox.top;
-                        }
-                    } else {
-                        p = me.el.translatePoints(x, y);
-                        x = p.right;
-                        y = p.top;
-                    }
-
-                    me.setPosition(x, y, animate);
-                } else {
-                    p = me.el.translatePoints(x, y);
-                    me.setPosition(p.right, p.top, animate);
-                }
-
-                return me;
-            }
-        });
-    }, this, 'Ext.Component');
-    
+        
     // src/Shadow.js
     Ext.ClassManager.onCreated(function () {
         Ext.Function.interceptAfter(Ext.Shadow.prototype, 'realign', function () {
@@ -261,28 +269,28 @@ Ext.onReady(function () {
             s.left = 'auto';
         });
     }, this, 'Ext.Shadow');
-    
+
     // src/layout/container/Box.js
     Ext.ClassManager.onCreated(function () {
         var renderTpl = Ext.layout.container.Box.prototype.renderTpl;
         // replace left with right
         renderTpl[7] = renderTpl[7].replace('left', 'right');
     }, this, 'Ext.layout.container.Box');
-    
+
     // src/layout/container/boxOverflow/Scroller.js
     Ext.ClassManager.onCreated(function () {
         Ext.override(Ext.layout.container.boxOverflow.Scroller, {
-            
+
             beginLayout: function (ownerContext) {
                 var me = this,
                     layout = me.layout,
                     dom = layout.innerCt.dom,
                     pos = dom.scrollWidth - dom.clientWidth - dom.scrollLeft;
-                
+
                 this.callParent(arguments);
                 ownerContext.innerCtScrollPos = pos;
             },
-            
+
             finishedLayout: function (ownerContext) {
                 var me = this,
                     layout = me.layout,
@@ -291,7 +299,7 @@ Ext.onReady(function () {
 
                 dom.scrollLeft = dom.scrollWidth - dom.clientWidth - scrollPos;
             },
-            
+
             getScrollPosition: function () {
                 var me = this,
                     layout = me.layout,
@@ -308,154 +316,35 @@ Ext.onReady(function () {
             }
         });
     }, this, 'Ext.layout.container.boxOverflow.Scroller');
-    
+
     // src/menu/Item.js
     Ext.ClassManager.onCreated(function () {
         var renderTpl = Ext.menu.Item.prototype.renderTpl;
         // replace margin-right with margin-left
         renderTpl[5] = renderTpl[5].replace('margin-right', 'margin-left');
     }, this, 'Ext.menu.Item');
-    
+
     // src/panel/Panel.js
     Ext.ClassManager.onCreated(function () {
         Ext.override(Ext.panel.Panel, {
             titleAlign: 'right'
         });
     }, this, 'Ext.panel.Panel');
-    
+
     // src/panel/Header.js
     Ext.ClassManager.onCreated(function () {
         Ext.override(Ext.panel.Header, {
             titleAlign: 'right'
         });
     }, this, 'Ext.panel.Header');
-    
+
     // src/grid/column/Column.js
     Ext.ClassManager.onCreated(function () {
         Ext.override(Ext.grid.column.Column, {
             align: 'right'
         });
     }, this, 'Ext.grid.column.Column');
-    
-    // src/util/Renderable.js
-    Ext.ClassManager.onCreated(function () {
-        Ext.override(Ext.util.Renderable, {
-            afterFirstLayout : function (width, height) {
-                var me = this,
-                    hasX = Ext.isDefined(me.x),
-                    hasY = Ext.isDefined(me.y),
-                    pos, xy;
 
-                // For floaters, calculate x and y if they aren't defined by aligning
-                // the sized element to the center of either the container or the ownerCt
-                if (me.floating && (!hasX || !hasY)) {
-                    if (me.floatParent) {
-                        xy = me.el.getAlignToXY(me.floatParent.getTargetEl(), 'c-c');
-                        pos = me.floatParent.getTargetEl().translatePoints(xy[0], xy[1]);
-                    } else {
-                        xy = me.el.getAlignToXY(me.container, 'c-c');
-                        pos = me.container.translatePoints(xy[0], xy[1]);
-                    }
-                    me.x = hasX ? me.x : pos.right;
-                    me.y = hasY ? me.y : pos.top;
-                    hasX = hasY = true;
-                }
-
-                if (hasX || hasY) {
-                    me.setPosition(me.x, me.y);
-                }
-                me.onBoxReady(width, height);
-                if (me.hasListeners.boxready) {
-                    me.fireEvent('boxready', me, width, height);
-                }
-            }
-        });
-    }, this, 'Ext.util.Renderable');
-    
-    // src/slider/Multi.js
-    Ext.ClassManager.onCreated(function () {
-        Ext.override(Ext.slider.Multi, {
-            getTrackpoint : function (xy) {
-                var me = this,
-                    result,
-                    positionProperty,
-                    sliderTrack = me.innerEl,
-                    trackLength;
-
-                if (me.vertical) {
-                    positionProperty = 'top';
-                    trackLength = sliderTrack.getHeight();
-                } else {
-                    positionProperty = 'right';
-                    trackLength = sliderTrack.getWidth();
-                }
-                result = Ext.Number.constrain(sliderTrack.translatePoints(xy)[positionProperty], 0, trackLength);
-                return me.vertical ? trackLength - result : result;
-            }
-        });
-    }, this, 'Ext.slider.Multi');
-    
-    // src/grid/plugin/HeaderResizer.js
-    Ext.ClassManager.onCreated(function () {
-        Ext.override(Ext.grid.plugin.HeaderResizer, {
-            onStart: function (e) {
-                var me       = this,
-                    dragHd   = me.dragHd,
-                    dragHdEl = dragHd.el,
-                    width    = dragHdEl.getWidth(),
-                    headerCt = me.headerCt,
-                    t        = e.getTarget(),
-                    xy, gridSection, dragHct, firstSection, lhsMarker, rhsMarker, el, offsetLeft, offsetTop, topLeft, markerHeight, top;
-
-                if (me.dragHd && !Ext.fly(t).hasCls(Ext.baseCSSPrefix + 'column-header-trigger')) {
-                    headerCt.dragging = true;
-                }
-
-                me.origWidth = width;
-
-                // setup marker proxies
-                if (!me.dynamic) {
-                    xy           = dragHdEl.getXY();
-                    gridSection  = headerCt.up('[scrollerOwner]');
-                    dragHct      = me.dragHd.up(':not([isGroupHeader])');
-                    firstSection = dragHct.up();
-                    lhsMarker    = gridSection.getLhsMarker();
-                    rhsMarker    = gridSection.getRhsMarker();
-                    el           = rhsMarker.parent();
-                    offsetLeft   = el.getLeft(true);
-                    offsetTop    = el.getTop(true);
-                    topLeft      = el.translatePoints(xy);
-                    markerHeight = firstSection.body.getHeight() + headerCt.getHeight();
-                    top = topLeft.top - offsetTop;
-
-                    lhsMarker.setTop(top);
-                    rhsMarker.setTop(top);
-                    lhsMarker.setHeight(markerHeight);
-                    rhsMarker.setHeight(markerHeight);
-                    lhsMarker.setLeft(topLeft.right - offsetLeft);
-                    rhsMarker.setLeft(topLeft.right + width - offsetLeft);
-                }
-            },
-            
-            onDrag: function (e) {
-                if (!this.dynamic) {
-                    var xy          = this.tracker.getXY('point'),
-                        gridSection = this.headerCt.up('[scrollerOwner]'),
-                        rhsMarker   = gridSection.getRhsMarker(),
-                        el          = rhsMarker.parent(),
-                        topLeft     = el.translatePoints(xy),
-                        offsetLeft  = el.getLeft(true);
-
-                    rhsMarker.setLeft(topLeft.right - offsetLeft);
-                // Resize as user interacts
-                } else {
-                    this.doResize();
-                }
-            }
-            
-        });
-    }, this, 'Ext.grid.plugin.HeaderResizer');
-    
 });
 
 }());
