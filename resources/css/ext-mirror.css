@@ -196,3 +196,9 @@
 .x-mirror .x-form-trigger-wrap-focus .x-form-trigger-click {
     background-position: -51px 0;
 }
+
+/* Form Validation */
+.x-mirror .x-form-invalid-under {
+    padding: 2px 18px 2px 2px;
+    background-position: right 2px;
+}
