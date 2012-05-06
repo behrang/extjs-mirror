@@ -164,12 +164,35 @@
 
 .x-mirror .x-box-scroller-left .x-toolbar-scroll-left,
 .x-mirror .x-box-scroller-left .x-tabbar-scroll-left {
-    background-position: 0 0;
     background-image: url('../../resources/themes/images/default/tab-bar/scroll-left.gif');
+    background-position: 0 0;
 }
 
 .x-mirror .x-box-scroller-right .x-toolbar-scroll-right,
 .x-mirror .x-box-scroller-right .x-tabbar-scroll-right {
-    background-position: -18px 0;
     background-image: url('../../resources/themes/images/default/tab-bar/scroll-right.gif');
+    background-position: -18px 0;
+}
+
+/* Trigger */
+.x-mirror .x-form-trigger {
+    background-image: url('../../resources/themes/images/default/form/trigger.gif');
+    background-position: -85px 0;
+}
+
+.x-mirror .x-form-trigger-over {
+    background-position: -68px 0;
+}
+
+.x-mirror .x-form-trigger-wrap-focus .x-form-trigger {
+    background-position: -34px 0;
+}
+
+.x-mirror .x-form-trigger-wrap-focus .x-form-trigger-over {
+    background-position: -17px 0;
+}
+
+.x-mirror .x-form-trigger-click,
+.x-mirror .x-form-trigger-wrap-focus .x-form-trigger-click {
+    background-position: -51px 0;
 }
