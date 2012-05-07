@@ -20,3 +20,6 @@ To use this, you have to develop your application for LTR. Then add a script (ex
 * Grid ([mirrored](http://behrang.github.com/extjs-mirror/2.html)) ([normal](http://behrang.github.com/extjs-mirror/2.html?ext-mirror-off))
 * Tabs ([mirrored](http://behrang.github.com/extjs-mirror/3.html)) ([normal](http://behrang.github.com/extjs-mirror/3.html?ext-mirror-off))
 * Feed Viewer ([mirrored](http://behrang.github.com/extjs-mirror/4.html)) ([normal](http://behrang.github.com/extjs-mirror/4.html?ext-mirror-off))
+
+### License
+As ExtJS, this project is licensed under [GPL v3](http://www.gnu.org/licenses/gpl.html).
