@@ -66,16 +66,6 @@
 }
 
 /* Button */
-.x-mirror .x-btn-default-toolbar-small-icon-text-left .x-btn-icon {
-    right: 0;
-    left: auto;
-}
-
-.x-mirror .x-btn-default-toolbar-small-icon-text-left .x-btn-inner {
-    padding-right: 20px;
-    padding-left: 4px;
-}
-
 .x-mirror .x-btn-arrow {
     background-image: url('../../resources/themes/images/default/button/arrow.gif');
 }
@@ -166,6 +156,24 @@
 
 .x-mirror .x-toolbar .x-toolbar-item {
     margin: 0 0 0 2px;
+}
+
+.x-mirror .x-btn-default-toolbar-small-icon-text-left .x-btn-icon {
+    right: 0;
+    left: auto;
+}
+
+.x-mirror .x-btn-default-toolbar-small-icon-text-left .x-btn-inner {
+    padding-right: 20px;
+    padding-left: 4px;
+}
+
+.x-mirror .x-tbar-page-prev {
+    background-image: url('../../resources/themes/images/default/grid/page-prev.gif') !important;
+}
+
+.x-mirror .x-tbar-page-next {
+    background-image: url('../../resources/themes/images/default/grid/page-next.gif') !important;
 }
 
 /* Tool Images */
