@@ -273,6 +273,11 @@
 }
 
 /* Date Picker */
+.x-mirror .x-datepicker .x-monthpicker {
+    right: 0;
+    left: auto;
+}
+
 .x-mirror .x-datepicker-prev {
     right: 5px;
     left: auto;
@@ -289,4 +294,46 @@
 
 .x-mirror .x-datepicker-next a {
     background-image: url('../../resources/themes/images/default/shared/right-btn.gif');
+}
+
+.x-mirror .x-monthpicker-item,
+.x-mirror .x-monthpicker-months,
+.x-mirror .x-monthpicker-years {
+    float: right;
+}
+
+.x-mirror .x-monthpicker-months {
+    border-left: 1px solid #1B376C;
+    border-right: 0;
+}
+
+.x-mirror .x-monthpicker-yearnav-prev {
+    background-position: 0 -120px;
+}
+
+.x-mirror .x-monthpicker-yearnav-prev-over {
+    background-position: 15px -120px;
+}
+
+.x-mirror .x-monthpicker-yearnav-next {
+    background-position: 0 -105px;
+}
+
+.x-mirror .x-monthpicker-yearnav-next-over {
+    background-position: 15px -105px;
+}
+
+.x-mirror table.x-datepicker-inner a {
+    padding-left: 4px;
+    padding-right: 0;
+    text-align: left;
+}
+
+.x-mirror table.x-datepicker-inner th span {
+    padding-left: 7px;
+    padding-right: 0;
+}
+
+.x-mirror table.x-datepicker-inner th {
+    text-align: left;
 }
