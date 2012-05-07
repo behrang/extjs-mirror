@@ -76,18 +76,87 @@
     padding-left: 4px;
 }
 
+.x-mirror .x-btn-arrow {
+    background-image: url('../../resources/themes/images/default/button/arrow.gif');
+}
+
+.x-mirror .x-btn-arrow-right {
+    background-position: left center;
+    padding-left: 12px;
+    padding-right: 0;
+}
+
+.x-mirror .x-btn-arrow-right .x-btn-inner {
+    padding-left: 0;
+    padding-right: 4px !important;
+}
+
+.x-mirror .x-btn-split-right {
+    background-image: url('../../resources/themes/images/default/button/s-arrow.gif');
+}
+
+.x-mirror .x-btn-over .x-btn-split-right {
+    background-image: url('../../resources/themes/images/default/button/s-arrow-o.gif');
+}
+
+.x-mirror .x-btn-split-right,
+.x-mirror .x-btn-over .x-btn-split-right {
+    background-position: left center;
+    padding-left: 14px;
+    padding-right: 0 !important;
+}
+
 .x-mirror .x-btn-default-small-icon-text-left .x-btn-inner {
-    padding-right: 20px;
+    padding-right: 20px !important;
     padding-left: 4px;
 }
 
-.x-mirror .x-btn-default-small-icon-text-left .x-btn-icon {
+.x-mirror .x-btn-default-medium-icon-text-left .x-btn-inner {
+    padding-right: 28px !important;
+    padding-left: 3px;
+}
+
+.x-mirror .x-btn-default-large-icon-text-left .x-btn-inner {
+    padding-right: 36px !important;
+    padding-left: 3px;
+}
+
+.x-mirror .x-btn-default-small-icon-text-right .x-btn-inner {
+    padding-left: 20px;
+    padding-right: 4px !important;
+}
+
+.x-mirror .x-btn-default-medium-icon-text-right .x-btn-inner {
+    padding-left: 28px;
+    padding-right: 4px !important;
+}
+
+.x-mirror .x-btn-default-large-icon-text-right .x-btn-inner {
+    padding-left: 36px;
+    padding-right: 4px !important;
+}
+
+
+.x-mirror .x-btn-default-small-icon-text-left .x-btn-icon,
+.x-mirror .x-btn-default-medium-icon-text-left .x-btn-icon,
+.x-mirror .x-btn-default-large-icon-text-left .x-btn-icon {
     right: 0;
     left: auto;
 }
 
-.x-mirror .x-btn-icon-text-left .x-btn-icon {
-    background-position: right center;
+.x-mirror .x-btn-default-small-icon-text-right .x-btn-icon,
+.x-mirror .x-btn-default-medium-icon-text-right .x-btn-icon,
+.x-mirror .x-btn-default-large-icon-text-right .x-btn-icon {
+    left: 0;
+    right: auto;
+}
+
+.x-mirror .x-btn .x-btn-left .x-btn-inner {
+    text-align: right;
+}
+
+.x-mirror .x-btn .x-btn-right .x-btn-inner {
+    text-align: left;
 }
 
 /* Toolbar */
@@ -201,4 +270,23 @@
 .x-mirror .x-form-invalid-under {
     padding: 2px 18px 2px 2px;
     background-position: right 2px;
+}
+
+/* Date Picker */
+.x-mirror .x-datepicker-prev {
+    right: 5px;
+    left: auto;
+}
+
+.x-mirror .x-datepicker-next {
+    left: 5px;
+    right: auto;
+}
+
+.x-mirror .x-datepicker-prev a {
+    background-image: url('../../resources/themes/images/default/shared/left-btn.gif');
+}
+
+.x-mirror .x-datepicker-next a {
+    background-image: url('../../resources/themes/images/default/shared/right-btn.gif');
 }

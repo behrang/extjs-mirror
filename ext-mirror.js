@@ -8,7 +8,10 @@ var Element = Ext.dom.Element,
     scrollTo = Element.scrollTo,
     getXY = Element.getXY,
     getPageXY = Ext.EventManager.getPageXY,
-    scrollbarPlacement;
+    scrollbarPlacement,
+    borders = {l: 'border-right-width', r: 'border-left-width', t: 'border-top-width', b: 'border-bottom-width'},
+    paddings = {l: 'padding-right', r: 'padding-left', t: 'padding-top', b: 'padding-bottom'},
+    margins = {l: 'margin-right', r: 'margin-left', t: 'margin-top', b: 'margin-bottom'};
 
 Ext.onReady(function () {
     
@@ -173,7 +176,7 @@ Ext.onReady(function () {
     
     // src/core/src/dom/AbstractElement.position.js
     Ext.override(Ext.dom.AbstractElement, {
-        setXY: function(pos) {
+        setXY: function (pos) {
             var me = this,
                 pts,
                 style,
@@ -203,6 +206,22 @@ Ext.onReady(function () {
             return me;
         }
     });
+    
+    // src/core/src/dom/AbstractElement.style.js
+    Ext.override(Ext.dom.AbstractElement, {
+        
+        getBorderWidth: function (side) {
+            return this.addStyles(side, borders);//
+        },
+        
+        getPadding: function (side) {
+            return this.addStyles(side, paddings);//
+        },
+        
+        margins: margins
+        
+    });
+    Element.margins = AbstractElement.margins = margins;
     
     // src/core/src/EventManager.js
     Ext.EventManager.getPageXY = function (event) {
