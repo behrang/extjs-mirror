@@ -178,7 +178,7 @@
 }
 
 .x-btn-default-toolbar-small-icon-text-left .x-btn-inner {
-    padding-right: 20px;
+    padding-right: 20px !important;
     padding-left: 4px;
 }
 

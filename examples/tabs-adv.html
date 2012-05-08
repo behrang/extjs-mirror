@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Advanced Tabs</title>
+    
+    <link rel="stylesheet" href="../extjs/resources/css/ext-all.css" type="text/css" media="screen" charset="utf-8">
+    <link rel="stylesheet" href="../resources/css/ext-mirror.css" type="text/css" media="screen" charset="utf-8">
+    <link rel="stylesheet" href="../extjs/examples/shared/example.css" type="text/css" media="screen" charset="utf-8"/>
+    <link rel="stylesheet" href="../extjs/examples/tabs/tabs-adv.css" type="text/css" media="screen" charset="utf-8"/>
+    
+    <style type="text/css" media="screen">
+        .x-btn-default-small {
+            margin-left: 8px;
+        }
+        .x-mirror .x-btn-default-small {
+            margin-right: 8px;
+            margin-left: 0;
+        }
+    </style>
+
+    <script src="../extjs/ext-debug.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../ext-mirror.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../extjs/examples/shared/examples.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" charset="utf-8">
+        Ext.Loader.config.disableCaching = false;
+        Ext.Loader.setPath('Ext.ux', '../extjs/examples/ux/');
+
+        Ext.require([
+            'Ext.tab.*',
+            'Ext.ux.TabCloseMenu'
+        ]);
+    </script>
+    <script src="../extjs/examples/tabs/tabs-adv.js" type="text/javascript" charset="utf-8"></script>
+    
+</head>
+<body>
+<div id="addButtonCt"></div>
+<br>
+<div id="tabs" style="margin:15px 0;"></div>
+</body>
+</html>
