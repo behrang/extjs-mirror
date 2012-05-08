@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>ExtTop - Desktop Sample App</title>
+    
+    <link rel="stylesheet" href="../extjs/resources/css/ext-all.css" type="text/css" media="screen" charset="utf-8">
+    <link rel="stylesheet" href="../extjs/examples/desktop/css/desktop.css" type="text/css" media="screen" charset="utf-8">
+    <link rel="stylesheet" href="../resources/css/ext-mirror.css" type="text/css" media="screen" charset="utf-8">
+    
+    <style type="text/css" media="screen">
+        .x-mirror .ux-wallpaper {
+            background-image: url('../extjs/examples/desktop/wallpapers/Blue-Sencha.jpg') !important;
+            background-position: right top;
+        }
+        .x-mirror #poweredby {
+            right: auto;
+            left: 20px;
+        }
+        .x-mirror .ux-taskbar {
+            padding: 0;
+        }
+        .x-mirror .ux-desktop-windowbar .x-btn-inner,
+        .x-mirror .x-nbr .ux-desktop-windowbar .x-btn-icon-text-left button {
+            text-align: right !important;
+        }
+    </style>
+
+    <script src="../extjs/ext-debug.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../ext-mirror.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" charset="utf-8">
+        Ext.Loader.setPath({
+            'Ext.ux.desktop': '../extjs/examples/desktop/js',
+            MyDesktop: '../extjs/examples/desktop/'
+        });
+
+        Ext.require('MyDesktop.App');
+
+        var myDesktopApp;
+        Ext.onReady(function () {
+            myDesktopApp = new MyDesktop.App();
+        });
+    </script>
+</head>
+<body>
+    <a href="http://www.sencha.com" target="_blank" alt="Powered by Ext JS"
+       id="poweredby"><div></div></a>
+</body>
+</html>
