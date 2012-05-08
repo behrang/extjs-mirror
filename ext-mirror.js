@@ -17,6 +17,15 @@ Ext.onReady(function () {
     
     //<debug>
     if (window.location.search.indexOf('ext-mirror-off') !== -1) {
+        var styleSheet,
+            len = document.styleSheets.length,
+            i = 0;
+        for(; i < len; i += 1) {
+            styleSheet = document.styleSheets.item(i);
+            if (styleSheet.href && styleSheet.href.indexOf('ext-mirror.css') > -1) {
+                styleSheet.disabled = true;
+            }
+        }
         return;
     }
     //</debug>
