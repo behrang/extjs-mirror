@@ -4,14 +4,17 @@ var Element = Ext.dom.Element,
     AbstractElement = Ext.dom.AbstractElement,
     LEFT = "left",
     RIGHT = "right",
-    positionTopRight = ['position', 'top', 'right'],
+    TOP = "top",
     scrollTo = Element.scrollTo,
     getXY = Element.getXY,
     getPageXY = Ext.EventManager.getPageXY,
     scrollbarPlacement,
     borders = {l: 'border-right-width', r: 'border-left-width', t: 'border-top-width', b: 'border-bottom-width'},
     paddings = {l: 'padding-right', r: 'padding-left', t: 'padding-top', b: 'padding-bottom'},
-    margins = {l: 'margin-right', r: 'margin-left', t: 'margin-top', b: 'margin-bottom'};
+    margins = {l: 'margin-right', r: 'margin-left', t: 'margin-top', b: 'margin-bottom'},
+    paddingsTLRB = [paddings.l, paddings.r, paddings.t, paddings.b],
+    bordersTLRB = [borders.l,  borders.r,  borders.t,  borders.b],
+    positionTopRight = ['position', 'top', 'right'];
 
 Ext.onReady(function () {
     
@@ -79,6 +82,56 @@ Ext.onReady(function () {
                 left: right,
                 top: top
             };
+        },
+        
+        getBox: function (contentBox, local) {
+            var me = this,
+                xy,
+                left,
+                top,
+                paddingWidth,
+                bordersWidth,
+                l, r, t, b, w, h, bx;
+
+            if (!local) {
+                xy = me.getXY();
+            } else {
+                xy = me.getStyle([RIGHT, TOP]);
+                xy = [ parseFloat(xy.right) || 0, parseFloat(xy.top) || 0];
+            }
+            w = me.getWidth();
+            h = me.getHeight();
+            if (!contentBox) {
+                bx = {
+                    x: xy[0],
+                    y: xy[1],
+                    0: xy[0],
+                    1: xy[1],
+                    width: w,
+                    height: h
+                };
+            } else {
+                paddingWidth = me.getStyle(paddingsTLRB);
+                bordersWidth = me.getStyle(bordersTLRB);
+
+                l = (parseFloat(bordersWidth[borders.l]) || 0) + (parseFloat(paddingWidth[paddings.l]) || 0);
+                r = (parseFloat(bordersWidth[borders.r]) || 0) + (parseFloat(paddingWidth[paddings.r]) || 0);
+                t = (parseFloat(bordersWidth[borders.t]) || 0) + (parseFloat(paddingWidth[paddings.t]) || 0);
+                b = (parseFloat(bordersWidth[borders.b]) || 0) + (parseFloat(paddingWidth[paddings.b]) || 0);
+
+                bx = {
+                    x: xy[0] + l,
+                    y: xy[1] + t,
+                    0: xy[0] + l,
+                    1: xy[1] + t,
+                    width: w - (l + r),
+                    height: h - (t + b)
+                };
+            }
+            bx.left = bx.x + bx.width;
+            bx.bottom = bx.y + bx.height;
+
+            return bx;
         },
         
         setLeftTop: function (left, top) {
@@ -351,7 +404,30 @@ Ext.onReady(function () {
         // replace margin-right with margin-left
         renderTpl[5] = renderTpl[5].replace('margin-right', 'margin-left');
     }, this, 'Ext.menu.Item');
-
+    
+    // src/layout/container/HBox.js
+    Ext.ClassManager.onCreated(function () {
+        Ext.layout.container.HBox.prototype.names.left = 'right';
+        Ext.layout.container.HBox.prototype.names.right = 'left';
+    }, this, 'Ext.layout.container.HBox');
+    
+    // src/layout/container/VBox.js
+    Ext.ClassManager.onCreated(function () {
+        Ext.layout.container.VBox.prototype.names.top = 'right';
+        Ext.layout.container.VBox.prototype.names.bottom = 'left';
+    }, this, 'Ext.layout.container.VBox');
+    
+    // src/form/field/HtmlEditor.js
+    Ext.ClassManager.onCreated(function () {
+        Ext.override(Ext.form.field.HtmlEditor, {
+            getDocMarkup: function () {
+                var me = this,
+                    h = me.iframeEl.getHeight() - me.iframePad * 2;
+                return Ext.String.format('<html><head><style type="text/css">body{direction:rtl;border:0;margin:0;padding:{0}px;height:{1}px;box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;cursor:text}</style></head><body></body></html>', me.iframePad, h);
+            }
+        });
+    }, this, 'Ext.form.field.HtmlEditor');
+    
     // src/panel/Panel.js
     Ext.ClassManager.onCreated(function () {
         Ext.override(Ext.panel.Panel, {

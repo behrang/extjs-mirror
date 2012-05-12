@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="../resources/css/ext-mirror.css" type="text/css" media="screen" charset="utf-8">
     
     <style type="text/css" media="screen">
+        .ux-wallpaper {
+            background-image: url('../extjs/examples/desktop/wallpapers/Blue-Sencha.jpg') !important;
+        }
         .x-mirror .ux-wallpaper {
             background-image: url('../extjs/examples/desktop/wallpapers/Blue-Sencha.jpg') !important;
             background-position: right top;
@@ -18,17 +21,23 @@
             left: 20px;
         }
         .x-mirror .ux-taskbar {
-            padding: 0;
+            padding: 0 !important;
+            padding-right: 4px !important;
         }
         .x-mirror .ux-desktop-windowbar .x-btn-inner,
         .x-mirror .x-nbr .ux-desktop-windowbar .x-btn-icon-text-left button {
             text-align: right !important;
+        }
+        .x-mirror .ux-start-button .x-btn-arrow-right {
+            padding-right: 10px;
+            padding-left: 12px;
         }
     </style>
 
     <script src="../extjs/ext-debug.js" type="text/javascript" charset="utf-8"></script>
     <script src="../ext-mirror.js" type="text/javascript" charset="utf-8"></script>
     <script type="text/javascript" charset="utf-8">
+        Ext.Loader.config.disableCaching = false;
         Ext.Loader.setPath({
             'Ext.ux.desktop': '../extjs/examples/desktop/js',
             MyDesktop: '../extjs/examples/desktop/'
