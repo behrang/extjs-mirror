@@ -405,6 +405,20 @@ Ext.onReady(function () {
         renderTpl[5] = renderTpl[5].replace('margin-right', 'margin-left');
     }, this, 'Ext.menu.Item');
     
+    // src/view/TableChunker.js
+    Ext.ClassManager.onCreated(function () {
+        var metaRowTpl = Ext.view.TableChunker.metaRowTpl;
+        metaRowTpl[3] = metaRowTpl[3].replace('{align}', '{[values.align === "left" ? "right" : values.align === "right" ? "left" : values.align]}');
+    }, this, 'Ext.view.TableChunker');
+    
+    // src/panel/Header.js
+    Ext.ClassManager.onCreated(function () {
+        Ext.Function.interceptAfter(Ext.panel.Header.prototype, 'initComponent', function () {
+            var me = this;
+            me.titleCmp.style = "text-align:" + (me.titleAlign === "right" ? "left" : me.titleAlign === "left" ? "right" : me.titleAlign);
+        });
+    }, this, 'Ext.panel.Header');
+    
     // src/layout/container/HBox.js
     Ext.ClassManager.onCreated(function () {
         Ext.layout.container.HBox.prototype.names.left = 'right';
@@ -427,27 +441,6 @@ Ext.onReady(function () {
             }
         });
     }, this, 'Ext.form.field.HtmlEditor');
-    
-    // src/panel/Panel.js
-    Ext.ClassManager.onCreated(function () {
-        Ext.override(Ext.panel.Panel, {
-            titleAlign: 'right'
-        });
-    }, this, 'Ext.panel.Panel');
-
-    // src/panel/Header.js
-    Ext.ClassManager.onCreated(function () {
-        Ext.override(Ext.panel.Header, {
-            titleAlign: 'right'
-        });
-    }, this, 'Ext.panel.Header');
-
-    // src/grid/column/Column.js
-    Ext.ClassManager.onCreated(function () {
-        Ext.override(Ext.grid.column.Column, {
-            align: 'right'
-        });
-    }, this, 'Ext.grid.column.Column');
 
 });
 

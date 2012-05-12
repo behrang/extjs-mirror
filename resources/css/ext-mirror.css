@@ -55,6 +55,14 @@
     border-right: 0;
 }
 
+.x-column-header-align-left {
+    text-align: right;
+}
+
+.x-column-header-align-right {
+    text-align: left;
+}
+
 /* Menu Item */
 .x-menu-item-link {
     padding-right: 32px;
