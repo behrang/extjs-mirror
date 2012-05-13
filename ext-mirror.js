@@ -4,19 +4,31 @@ var Element = Ext.dom.Element,
     AbstractElement = Ext.dom.AbstractElement,
     LEFT = "left",
     RIGHT = "right",
-    positionTopRight = ['position', 'top', 'right'],
+    TOP = "top",
     scrollTo = Element.scrollTo,
     getXY = Element.getXY,
     getPageXY = Ext.EventManager.getPageXY,
     scrollbarPlacement,
     borders = {l: 'border-right-width', r: 'border-left-width', t: 'border-top-width', b: 'border-bottom-width'},
     paddings = {l: 'padding-right', r: 'padding-left', t: 'padding-top', b: 'padding-bottom'},
-    margins = {l: 'margin-right', r: 'margin-left', t: 'margin-top', b: 'margin-bottom'};
+    margins = {l: 'margin-right', r: 'margin-left', t: 'margin-top', b: 'margin-bottom'},
+    paddingsTLRB = [paddings.l, paddings.r, paddings.t, paddings.b],
+    bordersTLRB = [borders.l,  borders.r,  borders.t,  borders.b],
+    positionTopRight = ['position', 'top', 'right'];
 
 Ext.onReady(function () {
     
     //<debug>
     if (window.location.search.indexOf('ext-mirror-off') !== -1) {
+        var styleSheet,
+            len = document.styleSheets.length,
+            i = 0;
+        for(; i < len; i += 1) {
+            styleSheet = document.styleSheets.item(i);
+            if (styleSheet.href && styleSheet.href.indexOf('ext-mirror.css') > -1) {
+                styleSheet.disabled = true;
+            }
+        }
         return;
     }
     //</debug>
@@ -70,6 +82,56 @@ Ext.onReady(function () {
                 left: right,
                 top: top
             };
+        },
+        
+        getBox: function (contentBox, local) {
+            var me = this,
+                xy,
+                left,
+                top,
+                paddingWidth,
+                bordersWidth,
+                l, r, t, b, w, h, bx;
+
+            if (!local) {
+                xy = me.getXY();
+            } else {
+                xy = me.getStyle([RIGHT, TOP]);
+                xy = [ parseFloat(xy.right) || 0, parseFloat(xy.top) || 0];
+            }
+            w = me.getWidth();
+            h = me.getHeight();
+            if (!contentBox) {
+                bx = {
+                    x: xy[0],
+                    y: xy[1],
+                    0: xy[0],
+                    1: xy[1],
+                    width: w,
+                    height: h
+                };
+            } else {
+                paddingWidth = me.getStyle(paddingsTLRB);
+                bordersWidth = me.getStyle(bordersTLRB);
+
+                l = (parseFloat(bordersWidth[borders.l]) || 0) + (parseFloat(paddingWidth[paddings.l]) || 0);
+                r = (parseFloat(bordersWidth[borders.r]) || 0) + (parseFloat(paddingWidth[paddings.r]) || 0);
+                t = (parseFloat(bordersWidth[borders.t]) || 0) + (parseFloat(paddingWidth[paddings.t]) || 0);
+                b = (parseFloat(bordersWidth[borders.b]) || 0) + (parseFloat(paddingWidth[paddings.b]) || 0);
+
+                bx = {
+                    x: xy[0] + l,
+                    y: xy[1] + t,
+                    0: xy[0] + l,
+                    1: xy[1] + t,
+                    width: w - (l + r),
+                    height: h - (t + b)
+                };
+            }
+            bx.left = bx.x + bx.width;
+            bx.bottom = bx.y + bx.height;
+
+            return bx;
         },
         
         setLeftTop: function (left, top) {
@@ -335,6 +397,189 @@ Ext.onReady(function () {
             }
         });
     }, this, 'Ext.layout.container.boxOverflow.Scroller');
+    
+    // src/resizer/ResizeTracker.js
+    Ext.ClassManager.onCreated(function () {
+        Ext.override(Ext.resizer.ResizeTracker, {
+            updateDimensions: function (e, atEnd) {
+                var me = this,
+                    region = me.activeResizeHandle.region,
+                    offset = me.getOffset(me.constrainTo ? 'dragTarget' : null),
+                    box = me.startBox,
+                    ratio,
+                    widthAdjust = 0,
+                    heightAdjust = 0,
+                    snappedWidth,
+                    snappedHeight,
+                    adjustX = 0,
+                    adjustY = 0,
+                    dragRatio,
+                    horizDir = offset[0] < 0 ? 'right' : 'left',
+                    vertDir = offset[1] < 0 ? 'down' : 'up',
+                    oppositeCorner,
+                    axis, // 1 = x, 2 = y, 3 = x and y.
+                    newBox,
+                    newHeight, newWidth;
+
+                switch (region) {
+                    case 'south':
+                        heightAdjust = offset[1];
+                        axis = 2;
+                        break;
+                    case 'north':
+                        heightAdjust = -offset[1];
+                        adjustY = -heightAdjust;
+                        axis = 2;
+                        break;
+                    case 'west':
+                        widthAdjust = offset[0];
+                        axis = 1;
+                        break;
+                    case 'east':
+                        widthAdjust = -offset[0];
+                        adjustX = -widthAdjust;
+                        axis = 1;
+                        break;
+                    case 'northwest':
+                        heightAdjust = -offset[1];
+                        adjustY = -heightAdjust;
+                        widthAdjust = offset[0];
+                        oppositeCorner = [box.x, box.y + box.height];
+                        axis = 3;
+                        break;
+                    case 'southwest':
+                        heightAdjust = offset[1];
+                        widthAdjust = offset[0];
+                        oppositeCorner = [box.x, box.y];
+                        axis = 3;
+                        break;
+                    case 'southeast':
+                        widthAdjust = -offset[0];
+                        adjustX = -widthAdjust;
+                        heightAdjust = offset[1];
+                        oppositeCorner = [box.x + box.width, box.y];
+                        axis = 3;
+                        break;
+                    case 'northeast':
+                        heightAdjust = -offset[1];
+                        adjustY = -heightAdjust;
+                        widthAdjust = -offset[0];
+                        adjustX = -widthAdjust;
+                        oppositeCorner = [box.x + box.width, box.y + box.height];
+                        axis = 3;
+                        break;
+                }
+
+                newBox = {
+                    width: box.width + widthAdjust,
+                    height: box.height + heightAdjust,
+                    x: box.x + adjustX,
+                    y: box.y + adjustY
+                };
+
+                // Snap value between stops according to configured increments
+                snappedWidth = Ext.Number.snap(newBox.width, me.widthIncrement);
+                snappedHeight = Ext.Number.snap(newBox.height, me.heightIncrement);
+                if (snappedWidth != newBox.width || snappedHeight != newBox.height){
+                    switch (region) {
+                        case 'northwest':
+                            newBox.y -= snappedHeight - newBox.height;
+                            break;
+                        case 'north':
+                            newBox.y -= snappedHeight - newBox.height;
+                            break;
+                        case 'southeast':
+                            newBox.x -= snappedWidth - newBox.width;
+                            break;
+                        case 'east':
+                            newBox.x -= snappedWidth - newBox.width;
+                            break;
+                        case 'northeast':
+                            newBox.x -= snappedWidth - newBox.width;
+                            newBox.y -= snappedHeight - newBox.height;
+                    }
+                    newBox.width = snappedWidth;
+                    newBox.height = snappedHeight;
+                }
+
+                // out of bounds
+                if (newBox.width < me.minWidth || newBox.width > me.maxWidth) {
+                    newBox.width = Ext.Number.constrain(newBox.width, me.minWidth, me.maxWidth);
+
+                    // Re-adjust the X position if we were dragging the west side
+                    if (adjustX) {
+                        newBox.x = box.x + (box.width - newBox.width);
+                    }
+                } else {
+                    me.lastX = newBox.x;
+                }
+                if (newBox.height < me.minHeight || newBox.height > me.maxHeight) {
+                    newBox.height = Ext.Number.constrain(newBox.height, me.minHeight, me.maxHeight);
+
+                    // Re-adjust the Y position if we were dragging the north side
+                    if (adjustY) {
+                        newBox.y = box.y + (box.height - newBox.height);
+                    }
+                } else {
+                    me.lastY = newBox.y;
+                }
+
+                // If this is configured to preserve the aspect ratio, or they are dragging using the shift key
+                if (me.preserveRatio || e.shiftKey) {
+                    ratio = me.startBox.width / me.startBox.height;
+
+                    // Calculate aspect ratio constrained values.
+                    newHeight = Math.min(Math.max(me.minHeight, newBox.width / ratio), me.maxHeight);
+                    newWidth = Math.min(Math.max(me.minWidth, newBox.height * ratio), me.maxWidth);
+
+                    // X axis: width-only change, height must obey
+                    if (axis == 1) {
+                        newBox.height = newHeight;
+                    }
+
+                    // Y axis: height-only change, width must obey
+                    else if (axis == 2) {
+                        newBox.width = newWidth;
+                    }
+
+                    // Corner drag.
+                    else {
+                        // Drag ratio is the ratio of the mouse point from the opposite corner.
+                        // Basically what edge we are dragging, a horizontal edge or a vertical edge.
+                        dragRatio = Math.abs(oppositeCorner[0] - this.lastXY[0]) / Math.abs(oppositeCorner[1] - this.lastXY[1]);
+
+                        // If drag ratio > aspect ratio then width is dominant and height must obey
+                        if (dragRatio > ratio) {
+                            newBox.height = newHeight;
+                        } else {
+                            newBox.width = newWidth;
+                        }
+
+                        // Handle dragging start coordinates
+                        if (region == 'northwest') {
+                            newBox.y = box.y - (newBox.height - box.height);
+                        } else if (region == 'northeast') {
+                            newBox.y = box.y - (newBox.height - box.height);
+                            newBox.x = box.x - (newBox.width - box.width);
+                        } else if (region == 'southeast') {
+                            newBox.x = box.x - (newBox.width - box.width);
+                        }
+                    }
+                }
+
+                if (heightAdjust === 0) {
+                    vertDir = 'none';
+                }
+                if (widthAdjust === 0) {
+                    horizDir = 'none';
+                }
+                me.resize(newBox, {
+                    horizontal: horizDir,
+                    vertical: vertDir
+                }, atEnd);
+            }
+        });
+    }, this, 'Ext.resizer.ResizeTracker');
 
     // src/menu/Item.js
     Ext.ClassManager.onCreated(function () {
@@ -342,27 +587,43 @@ Ext.onReady(function () {
         // replace margin-right with margin-left
         renderTpl[5] = renderTpl[5].replace('margin-right', 'margin-left');
     }, this, 'Ext.menu.Item');
-
-    // src/panel/Panel.js
+    
+    // src/view/TableChunker.js
     Ext.ClassManager.onCreated(function () {
-        Ext.override(Ext.panel.Panel, {
-            titleAlign: 'right'
-        });
-    }, this, 'Ext.panel.Panel');
-
+        var metaRowTpl = Ext.view.TableChunker.metaRowTpl;
+        metaRowTpl[3] = metaRowTpl[3].replace('{align}', '{[values.align === "left" ? "right" : values.align === "right" ? "left" : values.align]}');
+    }, this, 'Ext.view.TableChunker');
+    
     // src/panel/Header.js
     Ext.ClassManager.onCreated(function () {
-        Ext.override(Ext.panel.Header, {
-            titleAlign: 'right'
+        Ext.Function.interceptAfter(Ext.panel.Header.prototype, 'initComponent', function () {
+            var me = this;
+            me.titleCmp.style = "text-align:" + (me.titleAlign === "right" ? "left" : me.titleAlign === "left" ? "right" : me.titleAlign);
         });
     }, this, 'Ext.panel.Header');
-
-    // src/grid/column/Column.js
+    
+    // src/layout/container/HBox.js
     Ext.ClassManager.onCreated(function () {
-        Ext.override(Ext.grid.column.Column, {
-            align: 'right'
+        Ext.layout.container.HBox.prototype.names.left = 'right';
+        Ext.layout.container.HBox.prototype.names.right = 'left';
+    }, this, 'Ext.layout.container.HBox');
+    
+    // src/layout/container/VBox.js
+    Ext.ClassManager.onCreated(function () {
+        Ext.layout.container.VBox.prototype.names.top = 'right';
+        Ext.layout.container.VBox.prototype.names.bottom = 'left';
+    }, this, 'Ext.layout.container.VBox');
+    
+    // src/form/field/HtmlEditor.js
+    Ext.ClassManager.onCreated(function () {
+        Ext.override(Ext.form.field.HtmlEditor, {
+            getDocMarkup: function () {
+                var me = this,
+                    h = me.iframeEl.getHeight() - me.iframePad * 2;
+                return Ext.String.format('<html><head><style type="text/css">body{direction:rtl;border:0;margin:0;padding:{0}px;height:{1}px;box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;cursor:text}</style></head><body></body></html>', me.iframePad, h);
+            }
         });
-    }, this, 'Ext.grid.column.Column');
+    }, this, 'Ext.form.field.HtmlEditor');
 
 });
 
