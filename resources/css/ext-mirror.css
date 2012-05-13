@@ -342,6 +342,18 @@
     background-position: right 2px;
 }
 
+/* Tip */
+.x-tip {
+    left: auto !important;
+}
+
+/* Mask */
+.x-mask,
+.x-mask-msg {
+    right: 0;
+    left: auto;
+}
+
 /* Date Picker */
 .x-datepicker .x-monthpicker {
     right: 0;
