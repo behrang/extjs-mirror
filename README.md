@@ -17,10 +17,9 @@ There are more problems to solve. Some browsers like Firefox and IE, place scrol
 To use this, you have to develop your application for LTR. Then add a script (ext-mirror.js) and a css (ext-mirror.css) to your page and voila, everything will be converted to RTL. This way you can create a single internationalized app and use L10N to have both RTL and LTR apps.
 
 ### Examples
-* Grid ([mirrored](http://behrang.github.com/extjs-mirror/examples/grid.html)) ([normal](http://behrang.github.com/extjs-mirror/examples/grid.html?ext-mirror-off))
-* Tabs ([mirrored](http://behrang.github.com/extjs-mirror/examples/tabs.html)) ([normal](http://behrang.github.com/extjs-mirror/examples/tabs.html?ext-mirror-off))
 * Feed Viewer ([mirrored](http://behrang.github.com/extjs-mirror/examples/feed-viewer.html)) ([normal](http://behrang.github.com/extjs-mirror/examples/feed-viewer.html?ext-mirror-off))
-* Button ([mirrored](http://behrang.github.com/extjs-mirror/examples/button.html)) ([normal](http://behrang.github.com/extjs-mirror/examples/button.html?ext-mirror-off))
+* Desktop ([mirrored](http://behrang.github.com/extjs-mirror/examples/desktop.html)) ([normal](http://behrang.github.com/extjs-mirror/examples/desktop.html?ext-mirror-off))
+* Portal ([mirrored](http://behrang.github.com/extjs-mirror/examples/portal.html)) ([normal](http://behrang.github.com/extjs-mirror/examples/portal.html?ext-mirror-off))
 
 ### License
 As ExtJS, this project is licensed under [GPL v3](http://www.gnu.org/licenses/gpl.html).
