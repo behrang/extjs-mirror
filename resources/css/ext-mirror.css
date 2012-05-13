@@ -354,6 +354,11 @@
     left: auto;
 }
 
+/* Column Layout */
+.x-column {
+    float: right;
+}
+
 /* Date Picker */
 .x-datepicker .x-monthpicker {
     right: 0;
