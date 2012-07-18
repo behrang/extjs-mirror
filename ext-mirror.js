@@ -307,7 +307,7 @@ Ext.onReady(function () {
 
             db.appendChild(div); // now we can measure the div...
 
-            scrollbarPlacement = (div.clientLeft > 0) ? 'left' : 'right';
+            scrollbarPlacement = (div.clientLeft > 0 || Ext.isIE8) ? 'left' : 'right';
 
             db.removeChild(div);
         }
