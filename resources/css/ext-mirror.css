@@ -424,3 +424,28 @@ table.x-datepicker-inner th span {
 table.x-datepicker-inner th {
     text-align: left;
 }
+
+/* Internet Explorer */
+.x-nlg.x-nbr .x-btn-tl {
+    background-position: right -9px !important;
+}
+
+.x-nlg.x-nbr .x-btn-tr {
+    background-position: 0 -6px !important;
+}
+
+.x-nlg.x-nbr .x-btn-ml {
+    background-position: right 0 !important;
+}
+
+.x-nlg.x-nbr .x-btn-mr {
+    background-position: 0 0 !important;
+}
+
+.x-nlg.x-nbr .x-btn-bl {
+    background-position: right -15px !important;
+}
+
+.x-nlg.x-nbr .x-btn-br {
+    background-position: 0 -12px !important;
+}
