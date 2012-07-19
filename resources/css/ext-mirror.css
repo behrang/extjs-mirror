@@ -293,26 +293,6 @@
     float: right;
 }
 
-.x-box-scroller-left {
-    float: right;
-}
-
-.x-box-scroller-right {
-    float: left;
-}
-
-.x-box-scroller-left .x-toolbar-scroll-left,
-.x-box-scroller-left .x-tabbar-scroll-left {
-    background-image: url('../../resources/themes/images/default/tab-bar/scroll-left.gif');
-    background-position: 0 0;
-}
-
-.x-box-scroller-right .x-toolbar-scroll-right,
-.x-box-scroller-right .x-tabbar-scroll-right {
-    background-image: url('../../resources/themes/images/default/tab-bar/scroll-right.gif');
-    background-position: -18px 0;
-}
-
 /* Trigger */
 .x-form-trigger {
     background-image: url('../../resources/themes/images/default/form/trigger.gif');
@@ -426,26 +406,47 @@ table.x-datepicker-inner th {
 }
 
 /* Internet Explorer */
-.x-nlg.x-nbr .x-btn-tl {
+/* Buttons */
+.x-nbr .x-btn-tl {
     background-position: right -9px !important;
 }
 
-.x-nlg.x-nbr .x-btn-tr {
-    background-position: 0 -6px !important;
+.x-nbr .x-btn-tr {
+    background-position: left -6px !important;
 }
 
-.x-nlg.x-nbr .x-btn-ml {
+.x-nbr .x-btn-ml {
     background-position: right 0 !important;
 }
 
-.x-nlg.x-nbr .x-btn-mr {
-    background-position: 0 0 !important;
+.x-nbr .x-btn-mr {
+    background-position: left 0 !important;
 }
 
-.x-nlg.x-nbr .x-btn-bl {
+.x-nbr .x-btn-bl {
     background-position: right -15px !important;
 }
 
-.x-nlg.x-nbr .x-btn-br {
-    background-position: 0 -12px !important;
+.x-nbr .x-btn-br {
+    background-position: left -12px !important;
+}
+/* Tabs */
+.x-nbr .x-tab-tl {
+    background-position: right -12px !important;
+}
+
+.x-nbr .x-tab-tr {
+    background-position: left -8px !important;
+}
+
+.x-nbr .x-tab-ml {
+    background-position: right 0 !important;
+}
+
+.x-nbr .x-tab-mr {
+    background-position: left 0 !important;
+}
+
+.x-nbr .x-tab-close-btn {
+    right: auto;
 }
