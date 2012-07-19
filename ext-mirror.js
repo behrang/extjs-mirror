@@ -165,7 +165,7 @@ Ext.onReady(function () {
             if (!top) {
                 if (dom === document.body || dom === document.documentElement) {
                     value = -value;
-                } else {
+                } else if (!Ext.isIE) {
                     value = dom.scrollWidth - dom.clientWidth - value;
                 }
             }
@@ -307,7 +307,7 @@ Ext.onReady(function () {
 
             db.appendChild(div); // now we can measure the div...
 
-            scrollbarPlacement = (div.clientLeft > 0) ? 'left' : 'right';
+            scrollbarPlacement = (div.clientLeft > 0 || Ext.isIE8) ? 'left' : 'right';
 
             db.removeChild(div);
         }
@@ -369,16 +369,17 @@ Ext.onReady(function () {
                     pos = dom.scrollWidth - dom.clientWidth - dom.scrollLeft;
 
                 this.callParent(arguments);
-                ownerContext.innerCtScrollPos = pos;
+                ownerContext.innerCtScrollPos = Ext.isIE ? dom.scrollLeft : pos;
             },
 
             finishedLayout: function (ownerContext) {
                 var me = this,
                     layout = me.layout,
                     dom = layout.innerCt.dom,
-                    scrollPos = Math.min(me.getMaxScrollPosition(), ownerContext.innerCtScrollPos);
+                    scrollPos = Math.min(me.getMaxScrollPosition(), ownerContext.innerCtScrollPos),
+                    pos = dom.scrollWidth - dom.clientWidth - scrollPos;
 
-                dom.scrollLeft = dom.scrollWidth - dom.clientWidth - scrollPos;
+                dom.scrollLeft = Ext.isIE ? scrollPos : pos;
             },
 
             getScrollPosition: function () {
@@ -390,6 +391,8 @@ Ext.onReady(function () {
                 // Until we actually scroll, the scroll[Top|Left] is stored as zero to avoid DOM hits.
                 if (me.hasOwnProperty('scrollPosition')) {
                     result = me.scrollPosition;
+                } else if (Ext.isIE) {
+                    result = dom.scrollLeft || 0;
                 } else {
                     result = (dom.scrollWidth - dom.clientWidth - dom.scrollLeft) || 0;
                 }
