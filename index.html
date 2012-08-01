@@ -27,15 +27,22 @@
       <section>
         <h3>What is extjs-mirror</h3>
 
-<p>It is mostly a hack that adds RTL feature to <a href="http://www.sencha.com/products/extjs/">ExtJS framework</a>.</p>
+<p>ExtJS Mirror adds RTL feature to <a href="http://www.sencha.com/products/extjs/">ExtJS framework</a>.</p>
 
 <p>Some languages like Persian, Hebrew and Arabic are <a href="http://en.wikipedia.org/wiki/Right-to-left">RTL (Right-To-Left)</a>. ExtJS does not support RTL. To support RTL, every component should layout itself from right to left.</p>
 
 <p>This project, provides this feature by overriding some basic functionality in ExtJS. Here, positioning of elements are overridden so that instead of positioning elements from "Top Left", positioning is converted to "Top Right" (hence the name MIRROR).</p>
 
-<p>There are more problems to solve. Some browsers like Firefox and IE, place scrollbars on left in RTL pages and some like Chrome, place scrollbars on right in either LTR or RTL. So scrollbar position have to be considered.</p>
+<p>There are more problems to solve. Some browsers like Firefox and IE, place scrollbars on left in RTL pages and some like Chrome, place scrollbars on right in either LTR or RTL. So scrollbar position have to be considered. Also, some browsers use negative values in RTL context to scroll DOM elements, while others use positive values.</p>
 
-<p>To use this, you have to develop your application for LTR. Then add a script (ext-mirror.js) and a css file (ext-mirror.css) to your page and voila, everything will be converted to RTL. This way you can create a single internationalized app and use L10N to have both RTL and LTR apps.</p>
+<h3>Usage</h3>
+
+<p>Develop your application for LTR. Then add <code>ext-mirror.js</code> and <code>resources</code> folder to your project. After that you have to include <code>ext-mirror.js</code> on your page either by putting a script tag on your page (just put it somewhere after <code>ext.js</code> or <code>ext-debug.js</code>) or adding <code>ext-mirror.js</code> to your dependencies and using Sencha SDK to build your single script file. You have to also put a <code>link</code> to <code>resources/css/ext-mirror.css</code> on your page.</p>
+
+<pre><code>&lt;link href="resources/css/ext-mirror.css" type="text/css" rel="stylesheet" charset="utf-8"&gt;
+&lt;script src="ext-mirror.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;</code></pre>
+
+<p>This way you can create a single internationalized app and use localization to have both RTL and LTR apps.</p>
 
 <h3>Examples</h3>
 
