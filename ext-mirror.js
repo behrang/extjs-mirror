@@ -297,6 +297,9 @@ Ext.onReady(function () {
     
     // like src/core/src/Ext-more.js@getScrollbarSize
     Ext.getScrollbarPlacement = function (force) {
+        // Also Chrome and Webkit are buggy in recent versions and calculate clientLeft property wrong.
+        // As browsers are moving toward placing vertical scrollbar in RTL context on left, we simply return 'left'.
+        /*
         if (force || !scrollbarPlacement) {
             var db = document.body,
                 div = document.createElement('div');
@@ -307,12 +310,14 @@ Ext.onReady(function () {
 
             db.appendChild(div); // now we can measure the div...
 
-            scrollbarPlacement = (div.clientLeft > 0 || Ext.isIE8) ? 'left' : 'right';
+            scrollbarPlacement = (div.clientLeft > 0) ? 'left' : 'right';
 
             db.removeChild(div);
         }
 
         return scrollbarPlacement;
+        */
+        return 'left';
     };
     
     if (Ext.getScrollbarPlacement() === 'left') {
