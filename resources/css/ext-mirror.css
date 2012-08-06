@@ -323,7 +323,7 @@
 }
 
 /* Layer */
-.x-layer {
+.x-layer, .x-resizable-proxy {
     left: auto !important;
 }
 
