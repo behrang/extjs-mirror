@@ -322,11 +322,6 @@
     background-position: right 2px;
 }
 
-/* Layer */
-.x-layer, .x-resizable-proxy {
-    left: auto !important;
-}
-
 /* Mask */
 .x-mask,
 .x-mask-msg {
