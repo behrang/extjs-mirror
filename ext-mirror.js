@@ -224,7 +224,7 @@ Ext.onReady(function () {
             style = el.dom.style,
             pos;
         
-        if (pts.left) {
+        if (typeof pts.left !== 'undefined' && pts.left !== null) {
             pts.right = pts.left;
             delete pts.left;
         }
@@ -252,7 +252,7 @@ Ext.onReady(function () {
             pts = me.translatePoints(pos);
             style = me.dom.style;
             
-            if (pts.left) {
+            if (typeof pts.left !== 'undefined' && pts.left !== null) {
                 pts.right = pts.left;
                 delete pts.left;
             }
