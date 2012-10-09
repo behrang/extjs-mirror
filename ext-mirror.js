@@ -632,6 +632,20 @@ Ext.onReady(function () {
             }
         });
     }, this, 'Ext.form.field.HtmlEditor');
+    
+    // src/chart/Chart.js
+    Ext.ClassManager.onCreated(function () {
+        Ext.override(Ext.chart.Chart, {
+            getEventXY: function (e) {
+                var me = this,
+                    box = this.surface.getRegion(),
+                    pageXY = e.getXY(),
+                    x = box.right - pageXY[0],
+                    y = pageXY[1] - box.top;
+                return [x, y];
+            }
+        });
+    }, this, 'Ext.chart.Chart');
 
 });
 

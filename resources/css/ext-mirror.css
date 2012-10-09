@@ -445,3 +445,7 @@ table.x-datepicker-inner th {
 .x-nbr .x-tab-close-btn {
     right: auto;
 }
+/* Charts */
+.x-surface svg {
+    direction: ltr;
+}
