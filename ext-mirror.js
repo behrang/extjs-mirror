@@ -128,7 +128,7 @@ Ext.onReady(function () {
                     height: h - (t + b)
                 };
             }
-            bx.left = bx.x + bx.width;
+            bx.left = bx.x + bx.width; // TODO: check BorderSplitterTracker.js@27 and SplitterTracker.js@55,56
             bx.bottom = bx.y + bx.height;
 
             return bx;
@@ -343,6 +343,13 @@ Ext.onReady(function () {
             });
         }, this, 'Ext.grid.ColumnLayout');
     }
+    
+    // src/fx/Anim.js
+    Ext.ClassManager.onCreated(function () {
+        Ext.Function.interceptBefore(Ext.fx.Anim.prototype, 'initAttrs', function () {
+            delete this.to.left;
+        });
+    }, this, 'Ext.fx.Anim');
         
     // src/Shadow.js
     Ext.ClassManager.onCreated(function () {
