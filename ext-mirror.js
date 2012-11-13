@@ -47,8 +47,26 @@ Ext.onReady(function () {
             return this;
         },
         
-        getLeft: function (local) {
-            return !local ? this.getX() : parseFloat(this.getStyle(RIGHT)) || 0;
+        getLocalX: function () {
+            var me = this,
+                offsetParent,
+                x = me.getStyle(RIGHT);
+
+            if (!x || x === AUTO) {
+                return 0;
+            }
+            if (x && me.pxRe.test(x)) {
+                return parseFloat(x);
+            }
+
+            x = me.getX();
+
+            offsetParent = me.dom.offsetParent;
+            if (offsetParent) {
+                x -= Ext.fly(offsetParent).getX();
+            }
+
+            return x;
         },
         
         translatePoints: function (x, y) {
