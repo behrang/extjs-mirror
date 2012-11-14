@@ -410,6 +410,17 @@ table.x-datepicker-inner th {
     text-align: left;
 }
 
+/* Dock */
+.x-docked-left {
+    border-right-width: 1 !important;
+    border-left-width: 0 !important;
+}
+
+.x-docked-right {
+    border-left-width: 1 !important;
+    border-right-width: 0 !important;
+}
+
 /* Internet Explorer */
 /* Buttons */
 .x-nbr .x-btn-tl {
