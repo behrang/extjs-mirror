@@ -400,6 +400,27 @@ table.x-datepicker-inner th {
     text-align: left;
 }
 
+/* Charts */
+.x-surface svg {
+    direction: ltr;
+}
+
+/* Label */
+.x-form-item-label-right {
+    text-align: left;
+}
+
+/* Dock */
+.x-docked-left {
+    border-right-width: 1 !important;
+    border-left-width: 0 !important;
+}
+
+.x-docked-right {
+    border-left-width: 1 !important;
+    border-right-width: 0 !important;
+}
+
 /* Internet Explorer */
 /* Buttons */
 .x-nbr .x-btn-tl {
@@ -444,8 +465,4 @@ table.x-datepicker-inner th {
 
 .x-nbr .x-tab-close-btn {
     right: auto;
-}
-/* Charts */
-.x-surface svg {
-    direction: ltr;
 }

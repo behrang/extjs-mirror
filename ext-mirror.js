@@ -5,6 +5,7 @@ var Element = Ext.dom.Element,
     LEFT = "left",
     RIGHT = "right",
     TOP = "top",
+    AUTO = "auto",
     scrollTo = Element.scrollTo,
     getXY = Element.getXY,
     getPageXY = Ext.EventManager.getPageXY,
@@ -47,8 +48,26 @@ Ext.onReady(function () {
             return this;
         },
         
-        getLeft: function (local) {
-            return !local ? this.getX() : parseFloat(this.getStyle(RIGHT)) || 0;
+        getLocalX: function () {
+            var me = this,
+                offsetParent,
+                x = me.getStyle(RIGHT);
+
+            if (!x || x === AUTO) {
+                return 0;
+            }
+            if (x && me.pxRe.test(x)) {
+                return parseFloat(x);
+            }
+
+            x = me.getX();
+
+            offsetParent = me.dom.offsetParent;
+            if (offsetParent) {
+                x -= Ext.fly(offsetParent).getX();
+            }
+
+            return x;
         },
         
         translatePoints: function (x, y) {
@@ -412,6 +431,163 @@ Ext.onReady(function () {
             }
         });
     }, this, 'Ext.layout.container.boxOverflow.Scroller');
+
+    // src/layout/ContextItem.js
+    Ext.ClassManager.onCreated(function () {
+        Ext.override(Ext.layout.ContextItem, {
+            writeProps: function(dirtyProps, flushing) {
+                if (!(dirtyProps && typeof dirtyProps == 'object')) {
+                    //<debug warn>
+                    Ext.Logger.warn('writeProps expected dirtyProps to be an object');
+                    //</debug>
+                    return;
+                }
+
+                var me = this,
+                    el = me.el,
+                    styles = {},
+                    styleCount = 0, // used as a boolean, the exact count doesn't matter
+                    styleInfo = me.styleInfo,
+                    
+                    info,
+                    propName,
+                    numericValue,
+                    
+                    dirtyX = 'x' in dirtyProps,
+                    dirtyY = 'y' in dirtyProps,
+                    x = dirtyProps.x,
+                    y = dirtyProps.y,
+                    
+                    width = dirtyProps.width,
+                    height = dirtyProps.height,
+                    isBorderBox = me.isBorderBoxValue,
+                    target = me.target,
+                    max = Math.max,
+                    paddingWidth = 0,
+                    paddingHeight = 0,
+                    hasWidth, hasHeight, isAbsolute, scrollbarSize, style, targetEl;
+
+                // Process non-style properties:
+                if ('displayed' in dirtyProps) {
+                    el.setDisplayed(dirtyProps.displayed);
+                }
+
+                // Unblock any hard blocks (domBlocks) and copy dom styles into 'styles'
+                for (propName in dirtyProps) {
+                    if (flushing) {
+                        me.fireTriggers('domTriggers', propName);
+                        me.clearBlocks('domBlocks', propName);
+                        me.flushedProps[propName] = 1;
+                    }
+
+                    info = styleInfo[propName];
+                    if (info && info.dom) {
+                        // Numeric dirty values should have their associated suffix added
+                        if (info.suffix && (numericValue = parseInt(dirtyProps[propName], 10))) {
+                            styles[propName] = numericValue + info.suffix;
+                        }
+                        // Non-numeric (eg "auto") go in unchanged.
+                        else {
+                            styles[propName] = dirtyProps[propName];
+                        }
+                        ++styleCount;
+                    }
+                }
+
+                // convert x/y into setPosition (for a component) or left/top styles (for an el)
+                if (dirtyX || dirtyY) {
+                    if (target.isComponent) {
+                        // Ensure we always pass the current coordinate in if one coordinate has not been dirtied by a calculation cycle.
+                        target.setPosition(x||me.props.x, y||me.props.y);
+                    } else {
+                        // we wrap an element, so convert x/y to styles:
+                        if (dirtyX) {
+                            styles.right = x + 'px';
+                            ++styleCount;
+                        }
+                        if (dirtyY) {
+                            styles.top = y + 'px';
+                            ++styleCount;
+                        }
+                    }
+                }
+
+                // Support for the content-box box model...
+                if (!isBorderBox && (width > 0 || height > 0)) { // no need to subtract from 0
+                    // The width and height values assume the border-box box model,
+                    // so we must remove the padding & border to calculate the content-box.
+                    //<debug>
+                    if (!(me.borderInfo && me.paddingInfo)) {
+                        throw Error("Needed to have gotten the borderInfo and paddingInfo when the width or height was setProp'd");
+                    }
+                    //</debug>
+                    if(!me.frameBodyContext) {
+                        // Padding needs to be removed only if the element is not framed.
+                        paddingWidth = me.paddingInfo.width;
+                        paddingHeight = me.paddingInfo.height;
+                    }
+                    if (width) {
+                        width = max(parseInt(width, 10) - (me.borderInfo.width + paddingWidth), 0);
+                        styles.width = width + 'px';
+                        ++styleCount;
+                    }
+                    if (height) {
+                        height = max(parseInt(height, 10) - (me.borderInfo.height + paddingHeight), 0);
+                        styles.height = height + 'px';
+                        ++styleCount;
+                    }
+                }
+
+                // IE9 strict subtracts the scrollbar size from the element size when the element
+                // is absolutely positioned and uses box-sizing: border-box. To workaround this
+                // issue we have to add the the scrollbar size.
+                // 
+                // See http://social.msdn.microsoft.com/Forums/da-DK/iewebdevelopment/thread/47c5148f-a142-4a99-9542-5f230c78cb3b
+                //
+                if (me.wrapsComponent && Ext.isIE9 && Ext.isStrict) {
+                    // when we set a width and we have a vertical scrollbar (overflowY), we need
+                    // to add the scrollbar width... conversely for the height and overflowX
+                    if ((hasWidth = width !== undefined && me.hasOverflowY) ||
+                        (hasHeight = height !== undefined && me.hasOverflowX)) {
+                        // check that the component is absolute positioned and border-box:
+                        isAbsolute = me.isAbsolute;
+                        if (isAbsolute === undefined) {
+                            isAbsolute = false;
+                            targetEl = me.target.getTargetEl();
+                            style = targetEl.getStyle('position');
+
+                            if (style == 'absolute') {
+                                style = targetEl.getStyle('box-sizing');
+                                isAbsolute = (style == 'border-box');
+                            }
+
+                            me.isAbsolute = isAbsolute; // cache it
+                        }
+
+                        if (isAbsolute) {
+                            scrollbarSize = Ext.getScrollbarSize();
+
+                            if (hasWidth) {
+                                width = parseInt(width, 10) + scrollbarSize.width;
+                                styles.width = width + 'px';
+                                ++styleCount;
+                            }
+                            if (hasHeight) {
+                                height = parseInt(height, 10) + scrollbarSize.height;
+                                styles.height = height + 'px';
+                                ++styleCount;
+                            }
+                        }
+                    }
+                }
+
+                // we make only one call to setStyle to allow it to optimize itself:
+                if (styleCount) {
+                    el.setStyle(styles);
+                }
+            }
+        });
+    }, this, 'Ext.layout.ContextItem')
     
     // src/resizer/ResizeTracker.js
     Ext.ClassManager.onCreated(function () {
