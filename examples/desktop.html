@@ -4,16 +4,16 @@
     <meta charset="UTF-8">
     <title>ExtTop - Desktop Sample App</title>
     
-    <link rel="stylesheet" href="../extjs/resources/css/ext-all.css" type="text/css" media="screen" charset="utf-8">
+    <link rel="stylesheet" href="../ext/resources/css/ext-all.css" type="text/css" media="screen" charset="utf-8">
     <link rel="stylesheet" href="../resources/css/ext-mirror.css" type="text/css" media="screen" charset="utf-8">
-    <link rel="stylesheet" href="../extjs/examples/desktop/css/desktop.css" type="text/css" media="screen" charset="utf-8">
+    <link rel="stylesheet" href="../ext/examples/desktop/css/desktop.css" type="text/css" media="screen" charset="utf-8">
     
     <style type="text/css" media="screen">
         .ux-wallpaper {
-            background-image: url('../extjs/examples/desktop/wallpapers/Blue-Sencha.jpg') !important;
+            background-image: url('../ext/examples/desktop/wallpapers/Blue-Sencha.jpg') !important;
         }
         .x-mirror .ux-wallpaper {
-            background-image: url('../extjs/examples/desktop/wallpapers/Blue-Sencha.jpg') !important;
+            background-image: url('../ext/examples/desktop/wallpapers/Blue-Sencha.jpg') !important;
             background-position: right top;
         }
         .x-mirror #poweredby {
@@ -34,13 +34,13 @@
         }
     </style>
 
-    <script src="../extjs/ext-debug.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../ext/ext-debug.js" type="text/javascript" charset="utf-8"></script>
     <script src="../ext-mirror.js" type="text/javascript" charset="utf-8"></script>
     <script type="text/javascript" charset="utf-8">
         Ext.Loader.config.disableCaching = false;
         Ext.Loader.setPath({
-            'Ext.ux.desktop': '../extjs/examples/desktop/js',
-            MyDesktop: '../extjs/examples/desktop/'
+            'Ext.ux.desktop': '../ext/examples/desktop/js',
+            MyDesktop: '../ext/examples/desktop/'
         });
 
         Ext.require('MyDesktop.App');
