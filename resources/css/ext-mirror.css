@@ -447,13 +447,13 @@ table.x-datepicker-inner th {
 
 /* Dock */
 .x-docked-left {
-    border-right-width: 1 !important;
-    border-left-width: 0 !important;
+    border-right-width: 0 !important;
+    border-left-width: 1 !important;
 }
 
 .x-docked-right {
-    border-left-width: 1 !important;
-    border-right-width: 0 !important;
+    border-left-width: 0 !important;
+    border-right-width: 1 !important;
 }
 
 /* Internet Explorer */
