@@ -85,6 +85,11 @@
     left: auto;
 }
 
+.x-menu-item-icon-right {
+    right: auto;
+    left: 4px;
+}
+
 /* DD */
 .x-dd-drop-icon {
     right: 3px;
@@ -402,6 +407,32 @@ table.x-datepicker-inner th span {
 
 table.x-datepicker-inner th {
     text-align: left;
+}
+
+/* Number Field */
+.x-form-trigger-wrap .x-form-spinner-up, .x-form-trigger-wrap .x-form-spinner-down {
+    background-image: url('../../resources/themes/images/default/form/spinner.gif');
+}
+
+.x-form-trigger-wrap .x-form-spinner-down {
+    background-position: -85px -11px;
+}
+
+.x-form-trigger-wrap-focus .x-form-spinner-down {
+    background-position: -34px -11px;
+}
+
+.x-form-trigger-wrap-focus .x-form-spinner-down-over {
+    background-position: -17px -11px;
+}
+
+.x-form-trigger-wrap .x-form-spinner-down-click {
+    background-position: -51px -11px;
+}
+
+/* Date Field */
+.x-form-date-trigger {
+    background-image: url('../../resources/themes/images/default/form/date-trigger.gif');
 }
 
 /* Charts */
