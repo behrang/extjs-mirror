@@ -1,3 +1,9 @@
+### Not maintained anymore
+
+As Ext JS 4.2 will have RTL feature, this project is not maintained anymore.
+
+------------
+
 ExtJS Mirror
 ============
 
