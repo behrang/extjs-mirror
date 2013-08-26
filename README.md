@@ -35,3 +35,7 @@ This way you can create a single internationalized app and use localization to h
 
 ### License
 As ExtJS, this project is licensed under [GPL v3](http://www.gnu.org/licenses/gpl.html).
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/behrang/extjs-mirror/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
